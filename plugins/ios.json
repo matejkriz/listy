@@ -1,0 +1,33 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "com.ionicframework.listy858851"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.ionicframework.listy858851"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.ionicframework.listy858851"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.ionicframework.listy858851"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.ionicframework.listy858851"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ionicframework.listy858851"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "com.ionicframework.listy858851"
+        }
+    },
+    "dependent_plugins": {}
+}

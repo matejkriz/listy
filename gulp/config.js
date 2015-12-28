@@ -1,4 +1,4 @@
-var dest = "./www";
+var dest = './www';
 var src = './app';
 
 module.exports = {
@@ -8,36 +8,22 @@ module.exports = {
             baseDir: dest
         }
     },
-    jshint: {
-        src: src + '/js/**/*.js',
-        reporter: 'jshint-stylish'
-    },
-    sass: {
-        src: src + "/scss/ionic.app.scss",
-        watch: src + "/scss/**/*.scss",
-        dest: dest + "/css",
-        settings: {
-            imagePath: 'images' // Used by the image-url helper
-        }
-    },
-    images: {
-        src: src + "/img/**",
-        dest: dest + "/img"
-    },
     copy: {
         src: [
-            src + "/lib/**",
-            src + "/locale/**",
-            src + "/templates/**/*.html",
-            src + "/index.html"
+            src + '/lib/**',
+            src + '/locale/**',
+            src + '/templates/**/*.html',
+            src + '/index.html'
         ],
         dest: dest
     },
-    production: {
-        cssSrc: dest + '/css/*.css',
-        cssDest: dest + '/css',
-        jsSrc: dest + '/js/*.js',
-        jsDest: dest + '/js'
+    images: {
+        src: src + '/img/**',
+        dest: dest + '/img'
+    },
+    jshint: {
+        src: src + '/js/**/*.js',
+        reporter: 'jshint-stylish'
     },
     lang: {
         extractSrc: [
@@ -47,5 +33,31 @@ module.exports = {
         ],
         compileSrc: src + '/translations/*.po',
         dest: src + '/translations'
+    },
+    production: {
+        cssSrc: dest + '/css/*.css',
+        cssDest: dest + '/css',
+        jsSrc: dest + '/js/*.js',
+        jsDest: dest + '/js'
+    },
+    requirejs: {
+      baseUrl: src + '/js',
+      mainConfigFile: src + '/js/require.config.js',
+      name: 'require.config',
+      out: 'require.build.js',
+      shim: {
+      //     main: {
+      //         deps: ['html_template']
+      //     }
+      },
+      dest: dest + '/js'
+    },
+    sass: {
+        src: src + '/scss/ionic.app.scss',
+        watch: src + '/scss/**/*.scss',
+        dest: dest + '/css',
+        settings: {
+            imagePath: 'images' // Used by the image-url helper
+        }
     }
 };

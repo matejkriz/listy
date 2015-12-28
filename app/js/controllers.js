@@ -1,8 +1,8 @@
-angular.module('starter.controllers', [])
+angular.module('listy.controllers', [])
 
 .controller('DashCtrl', function($scope) {
   $scope.takePicture = function(){
-
+    alert("takePicture");
   }
 })
 
