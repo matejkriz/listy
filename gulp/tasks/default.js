@@ -1,3 +1,3 @@
 var gulp = require('gulp');
 
-gulp.task('default', ['jshint', 'sass', 'images', 'copy', 'watch']);
+gulp.task('default', ['jshint', 'requirejs:build', 'sass', 'images', 'copy', 'watch']);
