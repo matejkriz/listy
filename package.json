@@ -9,9 +9,12 @@
     "emitter": "0.0.5",
     "eventproxy": "^0.3.4",
     "fastclick": "^1.0.6",
+    "jquery": "^2.1.4",
+    "lodash": "^3.10.1",
     "opencv": "^4.0.0",
     "path": "^0.12.7",
     "requirejs": "^2.1.22",
+    "restangular": "^1.5.1",
     "stream": "0.0.2",
     "util": "^0.10.3"
   },

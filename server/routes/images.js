@@ -1,4 +1,5 @@
 var cv = require('opencv');
+var debug = require('debug')('server:server');
 var fs = require('fs');
 var path = require('path');
 var imagesPath = path.join(__dirname, '../public/images/')
@@ -11,6 +12,35 @@ var maxArea = 2500;
 var GREEN = [0, 255, 0]; // B, G, R
 var WHITE = [255, 255, 255]; // B, G, R
 var RED = [0, 0, 255]; // B, G, R
+
+function getTargetPath(img, imagesDir) {
+  return path.join(imagesDir, img.name);
+}
+
+function saveFile(srcPath, targetPath, callback) {
+  fs.rename(srcPath, targetPath, function(err) {
+    if (err) return next(err);
+    callback(targetPath);
+  });
+}
+
+function saveImage(targetPath) {
+  Image.create({
+    path: targetPath
+  }, function(err) {
+    if (err) return next(err);
+  });
+}
+
+
+exports.uploadImage = function(imagesDir) {
+  return function(req, res, next) {
+    var img = req.files.photo.image;
+    var targetPath = getTargetPath(img, imagesDir);
+    debug('targetPath: ' + targetPath);
+    saveFile(img.path, targetPath, saveImage);
+  }
+};
 
 exports.testOpenCV = function(req, res) {
   cv.readImage(imagesPath + 'stuff.png', function(err, im) {

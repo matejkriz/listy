@@ -22,23 +22,26 @@ define([
   // the 2nd parameter is an array of 'requires'
   // 'listy.services' is found in services.js
   // 'listy.controllers' is found in controllers.js
-  angular.module('listy', ['ionic', 'listy.controllers', 'listy.services', 'ui.router'])
+  angular.module('listy', ['ionic', 'listy.controllers', 'listy.services', 'ui.router', 'restangular'])
 
   .run(function($ionicPlatform) {
-    $ionicPlatform.ready(function() {
-      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-      // for form inputs)
-      if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-        cordova.plugins.Keyboard.disableScroll(true);
+      $ionicPlatform.ready(function() {
+        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+        // for form inputs)
+        if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+          cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+          cordova.plugins.Keyboard.disableScroll(true);
 
-      }
-      if (window.StatusBar) {
-        // org.apache.cordova.statusbar required
-        StatusBar.styleDefault();
-      }
-    });
-  })
+        }
+        if (window.StatusBar) {
+          // org.apache.cordova.statusbar required
+          StatusBar.styleDefault();
+        }
+      });
+    })
+    .constant('API', {
+      url: 'http://localhost:3000/api'
+    })
 
   .config(function($stateProvider, $urlRouterProvider) {
 

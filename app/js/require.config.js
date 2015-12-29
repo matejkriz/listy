@@ -7,10 +7,19 @@ requirejs.config({
     uiRouter: '../lib/ionic/js/angular-ui/angular-ui-router.min',
     ionic: '../lib/ionic/js/ionic.min',
     ionicAngular: '../lib/ionic/js/ionic-angular.min',
+    jquery: '../../node_modules/jquery/dist/jquery.min',
+    lodash: '../../node_modules/lodash/index',
+    restangular: '../../node_modules/restangular/dist/restangular.min',
     text: '../lib/ionic/js/text',
     'tmh.dynamicLocale': '../../node_modules/angular-dynamic-locale/dist/tmhDynamicLocale.min'
   },
   shim: {
+    jquery: {
+      exports: '$'
+    },
+    lodash: {
+      exports: '_'
+    },
     angular: {
       exports: 'angular'
     },
@@ -32,6 +41,9 @@ requirejs.config({
     },
     angularGettext: {
       deps: ['angular', 'jquery']
+    },
+    restangular: {
+      deps: ['angular', 'lodash']
     },
     'tmh.dynamicLocale': {
       deps: ['angular']
