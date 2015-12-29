@@ -4,9 +4,16 @@
   "description": "listy: An Ionic project",
   "dependencies": {
     "angular": "^1.4.8",
+    "asynclist": "0.0.3",
+    "buffers": "^0.1.1",
+    "emitter": "0.0.5",
+    "eventproxy": "^0.3.4",
     "fastclick": "^1.0.6",
     "opencv": "^4.0.0",
-    "requirejs": "^2.1.22"
+    "path": "^0.12.7",
+    "requirejs": "^2.1.22",
+    "stream": "0.0.2",
+    "util": "^0.10.3"
   },
   "devDependencies": {
     "angular-dynamic-locale": "^0.1.29",
@@ -60,6 +67,10 @@
     "cordova-plugin-camera"
   ],
   "cordovaPlatforms": [
-    "ios"
+    "ios",
+    {
+      "platform": "android",
+      "locator": "browser"
+    }
   ]
 }

@@ -4,7 +4,6 @@ requirejs.config({
     angularAnimate: '../lib/ionic/js/angular/angular-animate.min',
     angularGettext: '../../node_modules/angular-gettext/dist/angular-gettext.min',
     angularSanitize: '../lib/ionic/js/angular/angular-sanitize.min',
-    fastclick: '../../node_modules/fastclick/lib/fastclick',
     uiRouter: '../lib/ionic/js/angular-ui/angular-ui-router.min',
     ionic: '../lib/ionic/js/ionic.min',
     ionicAngular: '../lib/ionic/js/ionic-angular.min',
