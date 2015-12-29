@@ -5,7 +5,8 @@
 define([
   'ionic',
   'angular',
-  'app'
+  'app',
+  'restangular'
 ], function(
   ionic,
   angular,
