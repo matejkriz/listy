@@ -2,7 +2,7 @@ define([
   'angular',
   'uiRouter',
   'controllers',
-  'services',
+  'services/services',
   'ionicAngular'
 ], function(
   angular,

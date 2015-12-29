@@ -27,63 +27,76 @@
  *		});
  */
 
-var module = angular.module('starter.camera');
-module.service('CameraService', [CameraService]);
+define(['angular'], function(angular) {
+  "use strict";
 
-function CameraService($q) {
-  if (!window.Camera) {
-    return;
-  }
+  var factory = function($log, $q, $window) {
+    function showWarning(){
+      $log.warn('Camera plugin is not available outside cordova app.');
+    }
 
-  var defaultOptions = {
-    destinationType: Camera.DestinationType.DATA_URL,
-    sourceType: Camera.PictureSourceType.CAMERA,
-    mediaType: Camera.MediaType.PICTURE,
-    allowEdit: true
-  };
+    if (!$window.Camera) {
+      showWarning();
+      return {
+        getPicture: showWarning,
+        takePicture: showWarning,
+        importPicture: showWarning
+      };
+    }
 
-  function getPicture(options) {
-    var deferred = $q.defer();
+    var defaultOptions = {
+      destinationType: Camera.DestinationType.DATA_URL,
+      sourceType: Camera.PictureSourceType.CAMERA,
+      mediaType: Camera.MediaType.PICTURE,
+      allowEdit: true
+    };
 
-    if (!navigator.camera) {
-      deferred.resolve(null);
+    function getPicture(options) {
+      var deferred = $q.defer();
+
+      if (!navigator.camera) {
+        deferred.resolve(null);
+        return deferred.promise;
+      }
+
+      options = getDefaultOptionsIfNoOptions(options);
+
+      navigator.camera.getPicture(function(returnObj) {
+        deferred.resolve(returnObj);
+      }, function(error) {
+        console.warn('CameraService: ' + error);
+        deferred.reject(error);
+      }, options);
+
       return deferred.promise;
     }
 
-    options = getDefaultOptionsIfNoOptions(options);
-
-    navigator.camera.getPicture(function(returnObj) {
-      deferred.resolve(returnObj);
-    }, function(error) {
-      console.warn('CameraService: ' + error);
-      deferred.reject(error);
-    }, options)
-
-    return deferred.promise;
-  };
-
-  function getDefaultOptionsIfNoOptions(options) {
-    if (!options) {
-      options = defaultOptions;
+    function getDefaultOptionsIfNoOptions(options) {
+      if (!options) {
+        options = defaultOptions;
+      }
+      return options;
     }
-    return options;
+
+    function takePicture(options) {
+      options = getDefaultOptionsIfNoOptions(options);
+      options.sourceType = Camera.PictureSourceType.CAMERA;
+      return getPicture(options);
+    }
+
+    function importPicture(options) {
+      options = getDefaultOptionsIfNoOptions(options);
+      options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+      return getPicture(options);
+    }
+
+    return {
+      getPicture: getPicture,
+      takePicture: takePicture,
+      importPicture: importPicture
+    };
   };
 
-  function takePicture(options) {
-    options = getDefaultOptionsIfNoOptions(options);
-    options.sourceType = Camera.PictureSourceType.CAMERA;
-    return getPicture(options);
-  };
-
-  function importPicture(options) {
-    options = getDefaultOptionsIfNoOptions(options);
-    options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
-    return getPicture(options);
-  };
-
-  return {
-    getPicture: getPicture,
-    takePicture: takePicture,
-    importPicture: importPicture
-  };
-}
+  factory.$inject = ['$log', '$q', '$window'];
+  return factory;
+});
