@@ -1,11 +1,20 @@
 angular.module('listy.controllers', [])
 
-.controller('DashCtrl', function($scope, CameraService, api) {
-  $scope.takePicture = function(){
-      console.log("api = ", api);
-      CameraService.takePicture();
+.controller('DashCtrl', ['$scope', 'CameraService', 'api', function($scope, CameraService, api) {
+  $scope.takePicture = function() {
+    console.log("takePicture!");
+    CameraService.takePicture().then(function(neco) {
+      setTimeout(function() {
+        console.log("neco = ", neco);
+      }, 0);
+    });
   };
-})
+
+  $scope.sendPicture = function() {
+    console.log("sendPicture");
+    console.log("$scope.image = ", $scope.image);
+  };
+}])
 
 .controller('ChatsCtrl', function($scope, TreeService) {
   // With the new view caching in Ionic, Controllers are only called

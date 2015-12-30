@@ -3,20 +3,11 @@
   "version": "1.1.1",
   "description": "listy: An Ionic project",
   "dependencies": {
-    "angular": "^1.4.8",
-    "asynclist": "0.0.3",
-    "buffers": "^0.1.1",
-    "emitter": "0.0.5",
-    "eventproxy": "^0.3.4",
-    "fastclick": "^1.0.6",
     "jquery": "^2.1.4",
     "lodash": "^3.10.1",
-    "opencv": "^4.0.0",
-    "path": "^0.12.7",
+    "mongoose": "^4.3.4",
     "requirejs": "^2.1.22",
-    "restangular": "^1.5.1",
-    "stream": "0.0.2",
-    "util": "^0.10.3"
+    "restangular": "^1.5.1"
   },
   "devDependencies": {
     "angular-dynamic-locale": "^0.1.29",
@@ -39,7 +30,6 @@
     "gulp-notify": "^2.2.0",
     "gulp-rename": "^1.2.0",
     "gulp-requirejs": "^0.1.3",
-    "gulp-sass": "~1.3.3",
     "gulp-sourcemaps": "^1.5.0",
     "gulp-swig": "^0.7.4",
     "gulp-uglify": "^1.1.0",
@@ -57,8 +47,7 @@
     "q": "^1.4.1",
     "require-dir": "^0.1.0",
     "semver": "^4.3.6",
-    "shelljs": "^0.5.1",
-    "vinyl-source-stream": "~1.0.0"
+    "shelljs": "^0.5.1"
   },
   "cordovaPlugins": [
     "cordova-plugin-device",
