@@ -1,8 +1,16 @@
 <ion-view view-title="Rozpoznání listu">
   <ion-content class="padding">
-    <input type='file' accept="image/*;capture=camera">
-      Pořídit fotku
-    </input>
+    <!-- <ng-form name="takePicture" novalidate>
+      <p>
+        <input type='file' accept="image/*;capture=camera" file-model="image">
+          Pořídit fotku
+        </input>
+      </p>
+      <p>
+        <input type='submit' value='Nahrát' ng-click="sendPicture()"/>
+      </p>
+    </ng-form> -->
+    <!-- TODO: enable to take photo a and upload it to server -->
     <button class="button icon-left ion-camera button-block button-positive" ng-click="takePicture()">
       Pořídit fotku
     </button>

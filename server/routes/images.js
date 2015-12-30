@@ -2,7 +2,8 @@ var cv = require('opencv');
 var debug = require('debug')('server:server');
 var fs = require('fs');
 var path = require('path');
-var imagesPath = path.join(__dirname, '../public/images/')
+var imagesPath = path.join(__dirname, '../public/images/');
+var Image = require('../models/Image');
 
 var lowThresh = 0;
 var highThresh = 100;
@@ -50,7 +51,6 @@ exports.testOpenCV = function(req, res) {
     if (width < 1 || height < 1) throw new Error('Image has no size');
 
     var big = new cv.Matrix(height, width);
-    var all = new cv.Matrix(height, width);
 
     im.convertGrayscale();
     im_canny = im.copy();
@@ -74,7 +74,6 @@ exports.testOpenCV = function(req, res) {
     all.drawAllContours(contours, WHITE);
 
     big.save(imagesPath + 'big.png');
-    all.save(imagesPath + 'all.png');
 
     var img = fs.readFileSync(imagesPath + 'big.png');
     res.writeHead(200, {
