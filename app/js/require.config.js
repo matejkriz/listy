@@ -11,7 +11,8 @@ requirejs.config({
     lodash: '../../node_modules/lodash/index',
     restangular: '../../node_modules/restangular/dist/restangular.min',
     text: '../lib/ionic/js/text',
-    'tmh.dynamicLocale': '../../node_modules/angular-dynamic-locale/dist/tmhDynamicLocale.min'
+    'tmh.dynamicLocale': '../../node_modules/angular-dynamic-locale/dist/tmhDynamicLocale.min',
+    jsfeat: '../lib/jsfeat/build/jsfeat' // TODO: switch to minified version
   },
   shim: {
     jquery: {

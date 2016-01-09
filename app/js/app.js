@@ -3,7 +3,8 @@ define([
   'uiRouter',
   'controllers',
   'services/services',
-  'ionicAngular'
+  'ionicAngular',
+  'jsfeat'
 ], function(
   angular,
   uiRouter

@@ -1,6 +1,6 @@
 define(['angular', 'restangular'], function(angular) {
   "use strict";
-  var factory = function restApi(API, $log, Restangular) {
+  var factory = function(API, $log, Restangular) {
     return Restangular.withConfig(function(RestangularConfigurer) {
       RestangularConfigurer
         .setBaseUrl(API.url)

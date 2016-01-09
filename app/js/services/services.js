@@ -6,6 +6,7 @@ define(function(require) {
 
   services.service('CameraService', require('services/CameraService'));
   services.service('api', require('services/RestAPIService'));
+  services.service('feat', require('services/JSFeatService'));
   services.service('TreeService', require('services/TreeService'));
 
   return services;
