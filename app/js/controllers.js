@@ -1,6 +1,7 @@
 angular.module('listy.controllers', [])
 
-.controller('DashCtrl', ['$scope', 'CameraService', 'api', function($scope, CameraService, api) {
+.controller('DashCtrl', ['$scope', 'CameraService', 'api', 'feat', function($scope, CameraService, api, feat) {
+  console.log("feat.getMatrix() = ", feat.getMatrix());
   $scope.takePicture = function() {
     console.log("takePicture!");
     CameraService.takePicture().then(function(neco) {
