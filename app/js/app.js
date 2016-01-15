@@ -2,6 +2,7 @@ define([
   'angular',
   'uiRouter',
   'controllers',
+  'directives/directives',
   'services/services',
   'ionicAngular',
   'jsfeat'
@@ -23,7 +24,7 @@ define([
   // the 2nd parameter is an array of 'requires'
   // 'listy.services' is found in services.js
   // 'listy.controllers' is found in controllers.js
-  angular.module('listy', ['ionic', 'listy.controllers', 'listy.services', 'ui.router', 'restangular'])
+  angular.module('listy', ['ionic', 'listy.controllers', 'listy.directives', 'listy.services', 'ui.router', 'restangular'])
 
   .run(function($ionicPlatform) {
       $ionicPlatform.ready(function() {

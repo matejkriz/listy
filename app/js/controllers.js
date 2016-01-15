@@ -1,20 +1,48 @@
 angular.module('listy.controllers', [])
 
-.controller('DashCtrl', ['$scope', 'CameraService', 'api', 'feat', function($scope, CameraService, api, feat) {
-  console.log("feat.getMatrix() = ", feat.getMatrix());
+.controller('DashCtrl', ['$scope', 'Camera', 'Canvas', 'api', 'Feat', 'FileReader', 'Contours', 'CV', function($scope, Camera, Canvas, api, Feat, FileReader, Contours, CV) {
+  //Contours.closeContour();
+  //CV.findContours();
+  $scope.getFile = function(file) {
+    FileReader.readAsDataUrl(file, $scope)
+      .then(function(result) {
+        $scope.imageSrc = result;
+        drawImage(result, 'previewCanvas', 480, 480);
+      });
+  };
   $scope.takePicture = function() {
-    console.log("takePicture!");
-    CameraService.takePicture().then(function(neco) {
+    console.log('takePicture!');
+    Camera.takePicture().then(function(neco) {
       setTimeout(function() {
-        console.log("neco = ", neco);
+        console.log('neco = ', neco);
       }, 0);
     });
   };
 
-  $scope.sendPicture = function() {
-    console.log("sendPicture");
-    console.log("$scope.image = ", $scope.image);
-  };
+  function drawImage(image, canvasID, width, height) {
+    var ctx = Canvas.getContext(canvasID);
+
+    var img = new Image();
+    img.onload = function() {
+      width = img.width;
+      height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      var imageData = ctx.getImageData(0, 0, width, height);
+      drawBW(imageData, width, height, 'bwCanvas');
+
+    };
+    img.src = image;
+  }
+
+  function drawBW(imageData, width, height, canvasID) {
+    var imgU8 = Feat.getMatrix(width, height);
+    var ctx = Canvas.getContext(canvasID);
+
+    var imgBW = Feat.grayScale(imageData, width, height, imgU8);
+
+    Canvas.renderImageData(imgBW.imageData, imgBW.imgU8, ctx);
+  }
 }])
 
 .controller('ChatsCtrl', function($scope, TreeService) {

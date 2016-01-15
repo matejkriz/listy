@@ -332,21 +332,49 @@ define("uiRouter", ["angular"], function(){});
 
 angular.module('listy.controllers', [])
 
-.controller('DashCtrl', ['$scope', 'CameraService', 'api', 'feat', function($scope, CameraService, api, feat) {
-  console.log("feat.getMatrix() = ", feat.getMatrix());
+.controller('DashCtrl', ['$scope', 'Camera', 'Canvas', 'api', 'Feat', 'FileReader', 'Contours', 'CV', function($scope, Camera, Canvas, api, Feat, FileReader, Contours, CV) {
+  //Contours.closeContour();
+  //CV.findContours();
+  $scope.getFile = function(file) {
+    FileReader.readAsDataUrl(file, $scope)
+      .then(function(result) {
+        $scope.imageSrc = result;
+        drawImage(result, 'previewCanvas', 480, 480);
+      });
+  };
   $scope.takePicture = function() {
-    console.log("takePicture!");
-    CameraService.takePicture().then(function(neco) {
+    console.log('takePicture!');
+    Camera.takePicture().then(function(neco) {
       setTimeout(function() {
-        console.log("neco = ", neco);
+        console.log('neco = ', neco);
       }, 0);
     });
   };
 
-  $scope.sendPicture = function() {
-    console.log("sendPicture");
-    console.log("$scope.image = ", $scope.image);
-  };
+  function drawImage(image, canvasID, width, height) {
+    var ctx = Canvas.getContext(canvasID);
+
+    var img = new Image();
+    img.onload = function() {
+      width = img.width;
+      height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      var imageData = ctx.getImageData(0, 0, width, height);
+      drawBW(imageData, width, height, 'bwCanvas');
+
+    };
+    img.src = image;
+  }
+
+  function drawBW(imageData, width, height, canvasID) {
+    var imgU8 = Feat.getMatrix(width, height);
+    var ctx = Canvas.getContext(canvasID);
+
+    var imgBW = Feat.grayScale(imageData, width, height, imgU8);
+
+    Canvas.renderImageData(imgBW.imageData, imgBW.imgU8, ctx);
+  }
 }])
 
 .controller('ChatsCtrl', function($scope, TreeService) {
@@ -376,107 +404,32 @@ angular.module('listy.controllers', [])
 
 define("controllers", function(){});
 
-/*
- * CameraService
- *
- * @usage: expose API of cordova-plugin-camera for IOS, Android and W8.1 apps
- *
- * @doc: https://github.com/apache/cordova-plugin-camera
- *
- * @options:
- *		Quality				Number 	Quality of the saved image, range of 0 - 100, default: 50
- *		destinationType 	Number 	Format of the return value
- *		sourceType			Number 	Set the source of the picture
- *		allowEdit			Boolean Allow simple editing of image before selection
- *		encodingType		Number 	JPEG = 0, PNG = 1, default: JPEG
- *		targetWidth 		Number 	Width to scale image (pixels). Used with targetHeight
- *		targetHeight		Number 	Height to scale image (pixels). Used with targetHeight
- *		mediaType			String 	Set the type of media to select from
- *		cameraDirection 	Number 	Back = 0, Front-facing = 1
- *		popoverOptions		String 	iOS-only options that specify popover location in iPad
- *		saveToPhotoAlbum 	Boolean Save image to photo album on the device
- *
- * @example:
- *		CameraService.takePicture(options).then(function (response) {
- *			var image = response;
- *		});
- *  	CameraService.importPicture(options).then(function (response) {
- *			var image = response;
- *		});
- */
-
-define('services/CameraService',['angular'], function(angular) {
+define('directives/ngFileSelectDirective',[], function() {
   
-
-  var factory = function($log, $q, $window) {
-    function showWarning(){
-      $log.warn('Camera plugin is not available outside cordova app.');
-    }
-
-    if (!$window.Camera) {
-      showWarning();
-      return {
-        getPicture: showWarning,
-        takePicture: showWarning,
-        importPicture: showWarning
-      };
-    }
-
-    var defaultOptions = {
-      destinationType: Camera.DestinationType.DATA_URL,
-      sourceType: Camera.PictureSourceType.CAMERA,
-      mediaType: Camera.MediaType.PICTURE,
-      allowEdit: true
-    };
-
-    function getPicture(options) {
-      var deferred = $q.defer();
-
-      if (!navigator.camera) {
-        deferred.resolve(null);
-        return deferred.promise;
-      }
-
-      options = getDefaultOptionsIfNoOptions(options);
-
-      navigator.camera.getPicture(function(returnObj) {
-        deferred.resolve(returnObj);
-      }, function(error) {
-        console.warn('CameraService: ' + error);
-        deferred.reject(error);
-      }, options);
-
-      return deferred.promise;
-    }
-
-    function getDefaultOptionsIfNoOptions(options) {
-      if (!options) {
-        options = defaultOptions;
-      }
-      return options;
-    }
-
-    function takePicture(options) {
-      options = getDefaultOptionsIfNoOptions(options);
-      options.sourceType = Camera.PictureSourceType.CAMERA;
-      return getPicture(options);
-    }
-
-    function importPicture(options) {
-      options = getDefaultOptionsIfNoOptions(options);
-      options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
-      return getPicture(options);
-    }
-
+  var ngFileSelect = function() {
     return {
-      getPicture: getPicture,
-      takePicture: takePicture,
-      importPicture: importPicture
+      link: function($scope, el) {
+        el.bind("change", function(e) {
+          $scope.file = (e.srcElement || e.target).files[0];
+          $scope.getFile($scope.file);
+        });
+      }
     };
   };
 
-  factory.$inject = ['$log', '$q', '$window'];
-  return factory;
+  return ngFileSelect;
+});
+
+define('directives/directives',['require','angular','directives/ngFileSelectDirective'],function(require) {
+  
+
+  var angular = require('angular'),
+    directives = angular.module('listy.directives', []);
+
+    directives.directive('ngFileSelect', require('directives/ngFileSelectDirective'));
+
+  return directives;
+
 });
 
 /**
@@ -12869,21 +12822,1355 @@ define('services/RestAPIService',['angular', 'restangular'], function(angular) {
   return factory;
 });
 
-define('services/JSFeatService',[], function() {
+/*
+ * CameraService
+ *
+ * @usage: expose API of cordova-plugin-camera for IOS, Android and W8.1 apps
+ *
+ * @doc: https://github.com/apache/cordova-plugin-camera
+ *
+ * @options:
+ *		Quality				Number 	Quality of the saved image, range of 0 - 100, default: 50
+ *		destinationType 	Number 	Format of the return value
+ *		sourceType			Number 	Set the source of the picture
+ *		allowEdit			Boolean Allow simple editing of image before selection
+ *		encodingType		Number 	JPEG = 0, PNG = 1, default: JPEG
+ *		targetWidth 		Number 	Width to scale image (pixels). Used with targetHeight
+ *		targetHeight		Number 	Height to scale image (pixels). Used with targetHeight
+ *		mediaType			String 	Set the type of media to select from
+ *		cameraDirection 	Number 	Back = 0, Front-facing = 1
+ *		popoverOptions		String 	iOS-only options that specify popover location in iPad
+ *		saveToPhotoAlbum 	Boolean Save image to photo album on the device
+ *
+ * @example:
+ *		CameraService.takePicture(options).then(function (response) {
+ *			var image = response;
+ *		});
+ *  	CameraService.importPicture(options).then(function (response) {
+ *			var image = response;
+ *		});
+ */
+
+define('services/CameraService',['angular'], function(angular) {
+  
+
+  var factory = function($log, $q, $window) {
+    function showWarning(){
+      $log.warn('Camera plugin is not available outside cordova app.');
+    }
+
+    if (!$window.Camera) {
+      showWarning();
+      return {
+        getPicture: showWarning,
+        takePicture: showWarning,
+        importPicture: showWarning
+      };
+    }
+
+    var defaultOptions = {
+      destinationType: Camera.DestinationType.DATA_URL,
+      sourceType: Camera.PictureSourceType.CAMERA,
+      mediaType: Camera.MediaType.PICTURE,
+      allowEdit: true
+    };
+
+    function getPicture(options) {
+      var deferred = $q.defer();
+
+      if (!navigator.camera) {
+        deferred.resolve(null);
+        return deferred.promise;
+      }
+
+      options = getDefaultOptionsIfNoOptions(options);
+
+      navigator.camera.getPicture(function(returnObj) {
+        deferred.resolve(returnObj);
+      }, function(error) {
+        console.warn('CameraService: ' + error);
+        deferred.reject(error);
+      }, options);
+
+      return deferred.promise;
+    }
+
+    function getDefaultOptionsIfNoOptions(options) {
+      if (!options) {
+        options = defaultOptions;
+      }
+      return options;
+    }
+
+    function takePicture(options) {
+      options = getDefaultOptionsIfNoOptions(options);
+      options.sourceType = Camera.PictureSourceType.CAMERA;
+      return getPicture(options);
+    }
+
+    function importPicture(options) {
+      options = getDefaultOptionsIfNoOptions(options);
+      options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+      return getPicture(options);
+    }
+
+    return {
+      getPicture: getPicture,
+      takePicture: takePicture,
+      importPicture: importPicture
+    };
+  };
+
+  factory.$inject = ['$log', '$q', '$window'];
+  return factory;
+});
+
+define('services/CanvasService',[], function() {
   
   var factory = function($log) {
-    function getMatrix(columns, rows, dataType) {
-      columns = columns | 630;
-      rows = rows | 480;
-      dataType = dataType | jsfeat.U8_t | jsfeat.C1_t;
-      return new jsfeat.matrix_t(columns, rows, dataType);
+    function getContext(canvasID) {
+      var canvas = document.getElementById(canvasID);
+      return canvas.getContext('2d');
     }
+
+    function renderImageData(imageData, imgU8, context2D){
+      // render result back to canvas
+      var dataU32 = new Uint32Array(imageData.data.buffer);
+      var alpha = (0xff << 24);
+      var i = imgU8.cols * imgU8.rows,
+        pix = 0;
+      while (--i >= 0) {
+        pix = imgU8.data[i];
+        dataU32[i] = alpha | (pix << 16) | (pix << 8) | pix;
+      }
+
+      context2D.putImageData(imageData, 0, 0);
+    }
+
     return {
-      getMatrix: getMatrix
+      getContext: getContext,
+      renderImageData: renderImageData
     };
   };
 
   factory.$inject = ['$log'];
+  return factory;
+});
+
+/*
+ * sources (re-implement basic finder and then add iterative functionality?):
+ * - https://github.com/Dkendal/Moore-Neighbor_Contour_Tracer/blob/master/ContourTrace.cs
+ * - http://www.imageprocessingplace.com/downloads_V3/root_downloads/tutorials/contour_tracing_Abeer_George_Ghuneim/moore.html
+ */
+define('services/ContoursService',[], function() {
+  
+  var factory = function ContourFinder() {
+
+    this.pixelsWidth; // pixels width
+    this.pixelsHeight; // pixels height
+    this.pixels; // pixels (single array of r,g,b,a values of image)
+    this.fColor; // foreground color
+    this.bColor; // background color
+    this.threshold;
+    //this.maxContourPoints = Infinity; //was 500*4
+    this.maxContourPoints = 500 * 10;
+    this.allContours = [];
+
+    this.offset4 = function(x, y) {
+      return (y * this.pixelsWidth + x) * 4;
+    };
+    this.offset = function(x, y) {
+      return (y * this.pixelsWidth + x) * 4;
+    };
+
+    this.getPixel = function(x, y) {
+      return {
+        r: this.pixels[this.offset4(x, y)],
+        g: this.pixels[this.offset4(x, y) + 1],
+        b: this.pixels[this.offset4(x, y) + 2],
+        a: this.pixels[this.offset4(x, y) + 3]
+      };
+    };
+
+    //	this.setPixel = function(x, y, pixel) {
+    //		this.pixels[this.offset4(x, y)] = pixel.r;
+    //		this.pixels[this.offset4(x, y) + 1] = pixel.g;
+    //		this.pixels[this.offset4(x, y) + 2] = pixel.b;
+    //		this.pixels[this.offset4(x, y) + 3] = pixel.a;
+    //	}
+    this.setPixel = function(x, y, pixel) {
+      this.pixels[this.offset4(x, y)] = pixel[0];
+      this.pixels[this.offset4(x, y) + 1] = pixel[1];
+      this.pixels[this.offset4(x, y) + 2] = pixel[2];
+      this.pixels[this.offset4(x, y) + 3] = pixel[3];
+    };
+
+
+    this.findContours = function(image, foregroundColor, backgroundColor, threshold) {
+      var w = this.pixelsWidth = image.width;
+      var h = this.pixelsHeight = image.height;
+      this.fColor = foregroundColor;
+      this.bColor = backgroundColor;
+      this.threshold = threshold;
+
+      // create a new pixel array
+      var imageCtx = image.getContext('2d');
+      var imageData = imageCtx.getImageData(0, 0, w, h);
+      //console.log("imageData: ",imageData);
+      var pixels = this.pixels = imageData.data;
+      //console.log("pixels: ",pixels);
+      var prevValue = 0;
+
+      for (var y = 0; y < h; y++) {
+        for (var x = 0; x < w; x++) {
+          var pix = this.getPixel(x, y);
+          var factor = ((pix.r * .3 + pix.g * .59 + pix.b * .11))
+            //console.log(index+": "+r+" "+" "+g+" "+b+" "+a);
+
+          //var value = g;
+          var value = (factor > threshold) ? 255 : 0; // threshold
+
+          //console.log(" > "+value);
+
+          //this.setPixel(x, y, { r: value, g: value, b: value, a: pix.a });
+          this.setPixel(x, y, [value, value, value, pix.a]);
+          //				pixels[index].r = value;
+          //				pixels[index].g = value;
+          //				pixels[index].b = value;
+          //				//pixels[index].a = value;
+        }
+      }
+
+      // copy the image data back onto the canvas
+      //imageCtx.putImageData(imageData, 0, 0); // at coords 0,0
+      //return;
+
+      for (var y = 0; y < h; y++) {
+        for (var x = 0; x < w; x++) {
+          var pix = this.getPixel(x, y);
+
+          var value = pix.g;
+          value = (value > threshold) ? 255 : 0;
+          // if we enter a foreGround color and red isn't 0 (already stored as contour)
+          if (prevValue === backgroundColor && value === foregroundColor && pix.r != 0) {
+            var points = this.followContour({
+              x: x,
+              y: y
+            });
+            this.allContours.push(points);
+          }
+
+          //pix.r = 255;
+          this.setPixel(x, y, [pix.r, pix.g, pix.b, pix.a]);
+          prevValue = value;
+        }
+      }
+
+      /*for (var i = 0, n = pixels.length; i < n; i += 4) {
+      	var grayscale = pixels[i  ] * .3 + pixels[i+1] * .59 + pixels[i+2] * .11;
+
+      	alpha = pixels[i+3];
+      	//console.log("alpha: ",alpha);
+      	var value = (alpha > threshold)? 255 : 0;
+      	//console.log("value: ",value);
+      	/*pixels[i  ] = value; 	// red
+      	pixels[i+1] = value; 	// green
+      	pixels[i+2] = value; 	// blue
+      	pixels[i+3] = value; 	// alpha*/
+      /*
+      	if(alpha > threshold) {
+      		pixels[i  ] = 255; 	// red
+      	}
+      }*/
+
+      /*for (var y = 0; y < height; y++) {
+      	inpos = y * width * 4; // *4 for 4 ints per pixel
+      	outpos = inpos + w2 * 4
+      	for (var x = 0; x < w2; x++) {
+      		r = imageData.data[inpos++] / 3; // less red
+      		g = imageData.data[inpos++] / 3; // less green
+      		b = imageData.data[inpos++] * 5; // MORE BLUE
+      		a = imageData.data[inpos++];     // same alpha
+
+      		b = Math.min(255, b); // clamp to [0..255]
+
+      		imageData.data[outpos++] = r;
+      		imageData.data[outpos++] = g;
+      		imageData.data[outpos++] = b;
+      		imageData.data[outpos++] = a;
+      	}
+      }*/
+
+      // copy the image data back onto the canvas
+      imageCtx.putImageData(imageData, 0, 0); // at coords 0,0
+    };
+
+    this.followContour = function(startPoint) {
+      //		console.log("followContour @",startPoint);
+      points = []; // start new contour
+      points.push(startPoint);
+      var w = this.pixelsWidth;
+      var h = this.pixelsHeight;
+
+      //console.log("w :",w," h: ",h);
+
+      var point = startPoint;
+      var numPoints = 0;
+
+      // define neighborhood (with: x offset, y offset, index offset, next neighborhood element to check)
+      //		var neighborhood = [
+      //			[ 1,  0,  1,   7], // east
+      //			[ 1,  1,  w+1, 0], // south-east
+      //			[ 0,  1,  w,   1], // south
+      //			[-1,  1,  w-1, 2], // south-west
+      //			[-1,  0, -1,   3], // west
+      //			[-1, -1, -w-1, 4], // north-west
+      //			[ 0, -1, -w,   5], // north
+      //			[ 1, -1, -w+1, 6]  // north-east
+      //		];
+
+      //		var neighborhood = [
+      //            { xd: -1, yd:  0, offs: -1,   next: 7 }, // west
+      //            { xd: -1, yd: -1, offs: -w-1, next: 0 }, // north-west
+      //            { xd:  0, yd: -1, offs: -w,   next: 1 }, // north
+      //            { xd:  1, yd: -1, offs: -w+1, next: 2 }, // north-east
+      //            { xd:  1, yd:  0, offs:  1,   next: 3 }, // east
+      //            { xd:  1, yd:  1, offs:  w+1, next: 4 }, // south-east
+      //            { xd:  0, yd:  1, offs:  w,   next: 5 }, // south
+      //            { xd: -1, yd:  1, offs:  w-1, next: 6 }  // south-west
+      //		];
+
+      //		var neighborhood = [
+      //	        [-1,  0, -1,   7],
+      //	        [-3, -1, -w-3, 7],
+      //	        [-2, -1, -w-2, 1],
+      //	        [-1, -1, -w-1, 1],
+      //	        [ 1,  0,  1,   3],
+      //	        [ 3,  1,  w+3, 3],
+      //	        [ 2,  1,  w+2, 5],
+      //	        [ 1,  1,  w+1, 5]
+      //        ];
+      var neighborhood = [{
+          xd: 1,
+          yd: 0,
+          offs: 1,
+          next: 3
+        }, // east
+        {
+          xd: 0,
+          yd: 1,
+          offs: w,
+          next: 0
+        }, // south
+        {
+          xd: -1,
+          yd: 0,
+          offs: -1,
+          next: 1
+        }, // west
+        {
+          xd: 0,
+          yd: -1,
+          offs: -w,
+          next: 2
+        } // north
+      ];
+
+      var prevIndex;
+      var nextNeighbor = 0; // starting point for neighborhood search (index for neighborhood array)
+      do {
+        //console.log("  point: ",point.x,point.y);
+
+        // go clockwise trough neighbors
+        var index = this.offset4(point.x, point.y);
+        this.pixels[index] = 0; // r
+        this.pixels[index + 2] = 0; // b
+        var newPoint = {};
+        //console.log("  index: ",index);
+        var i = nextNeighbor;
+        //console.log("    nextNeighbor: ",nextNeighbor);
+        for (var j = 0; j < neighborhood.length; j++) {
+
+          //console.log("    neighbor: ",i);
+          var nIndex = index + neighborhood[i].offs * 4;
+          //console.log("      neighbor index: ",nIndex);
+          //console.log("      neighbor g index: ",nIndex+1);
+          //console.log("      value: ",this.pixels[nIndex+1]);
+          // todo: check if in range
+          if (this.pixels[nIndex + 1] === this.fColor && nIndex != prevIndex) {
+            //console.log("      === fColor");
+            newPoint = {
+              x: point.x + neighborhood[i].xd,
+              y: point.y + neighborhood[i].yd
+            };
+            nextNeighbor = neighborhood[i].next;
+            break;
+          }
+
+          i++;
+          i = i % neighborhood.length;
+
+        }
+        if (newPoint === undefined) {
+          break;
+        } else {
+          //console.log("      new point: ",newPoint[0],newPoint[1]);
+          point = newPoint;
+          points.push(point);
+          //console.log("      points: ",this.getPoints(points));
+
+        }
+
+        prevIndex = index;
+
+        //var index = y*w*4+x*4;
+        numPoints++;
+        //console.log(point[0],startPoint[0],"  ",point[1],startPoint[1]);
+
+      } while (!(point.x === startPoint.x && point.y === startPoint.y) && numPoints < this.maxContourPoints);
+
+      this.closeContour(points);
+
+      return points;
+    };
+
+    this.closeContour = function(points) {
+			console.log("CLOSE");
+      //console.log("pixels: ",this.pixels);
+    };
+
+    this.getPoints = function(points) {
+      var log = "";
+      for (var i = 0; i < points.length; i++) {
+        var point = points[i];
+        log += point.x + "," + point.y + " > ";
+      }
+      return log;
+    };
+  }
+  return factory;
+});
+
+/*
+Copyright (c) 2011 Juan Mellado
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+/*
+References:
+- "OpenCV: Open Computer Vision Library"
+  http://sourceforge.net/projects/opencvlibrary/
+- "Stack Blur: Fast But Goodlooking"
+  http://incubator.quasimondo.com/processing/fast_blur_deluxe.php
+*/
+define('services/CVService',[], function() {
+  var CV = CV || {};
+
+  CV.Image = function(width, height, data) {
+    this.width = width || 0;
+    this.height = height || 0;
+    this.data = data || [];
+  };
+
+  CV.grayscale = function(imageSrc, imageDst) {
+    var src = imageSrc.data,
+      dst = imageDst.data,
+      len = src.length,
+      i = 0,
+      j = 0;
+
+    for (; i < len; i += 4) {
+      dst[j++] =
+        (src[i] * 0.299 + src[i + 1] * 0.587 + src[i + 2] * 0.114 + 0.5) & 0xff;
+    }
+
+    imageDst.width = imageSrc.width;
+    imageDst.height = imageSrc.height;
+
+    return imageDst;
+  };
+
+  CV.threshold = function(imageSrc, imageDst, threshold) {
+    var src = imageSrc.data,
+      dst = imageDst.data,
+      len = src.length,
+      tab = [],
+      i;
+
+    for (i = 0; i < 256; ++i) {
+      tab[i] = i <= threshold ? 0 : 255;
+    }
+
+    for (i = 0; i < len; ++i) {
+      dst[i] = tab[src[i]];
+    }
+
+    imageDst.width = imageSrc.width;
+    imageDst.height = imageSrc.height;
+
+    return imageDst;
+  };
+
+  CV.adaptiveThreshold = function(imageSrc, imageDst, kernelSize, threshold) {
+    var src = imageSrc.data,
+      dst = imageDst.data,
+      len = src.length,
+      tab = [],
+      i;
+
+    CV.stackBoxBlur(imageSrc, imageDst, kernelSize);
+
+    for (i = 0; i < 768; ++i) {
+      tab[i] = (i - 255 <= -threshold) ? 255 : 0;
+    }
+
+    for (i = 0; i < len; ++i) {
+      dst[i] = tab[src[i] - dst[i] + 255];
+    }
+
+    imageDst.width = imageSrc.width;
+    imageDst.height = imageSrc.height;
+
+    return imageDst;
+  };
+
+  CV.otsu = function(imageSrc) {
+    var src = imageSrc.data,
+      len = src.length,
+      hist = [],
+      threshold = 0,
+      sum = 0,
+      sumB = 0,
+      wB = 0,
+      wF = 0,
+      max = 0,
+      mu, between, i;
+
+    for (i = 0; i < 256; ++i) {
+      hist[i] = 0;
+    }
+
+    for (i = 0; i < len; ++i) {
+      hist[src[i]]++;
+    }
+
+    for (i = 0; i < 256; ++i) {
+      sum += hist[i] * i;
+    }
+
+    for (i = 0; i < 256; ++i) {
+      wB += hist[i];
+      if (0 !== wB) {
+
+        wF = len - wB;
+        if (0 === wF) {
+          break;
+        }
+
+        sumB += hist[i] * i;
+
+        mu = (sumB / wB) - ((sum - sumB) / wF);
+
+        between = wB * wF * mu * mu;
+
+        if (between > max) {
+          max = between;
+          threshold = i;
+        }
+      }
+    }
+
+    return threshold;
+  };
+
+  CV.stackBoxBlurMult = [1, 171, 205, 293, 57, 373, 79, 137, 241, 27, 391, 357, 41, 19, 283, 265];
+
+  CV.stackBoxBlurShift = [0, 9, 10, 11, 9, 12, 10, 11, 12, 9, 13, 13, 10, 9, 13, 13];
+
+  CV.BlurStack = function() {
+    this.color = 0;
+    this.next = null;
+  };
+
+  CV.stackBoxBlur = function(imageSrc, imageDst, kernelSize) {
+    var src = imageSrc.data,
+      dst = imageDst.data,
+      height = imageSrc.height,
+      width = imageSrc.width,
+      heightMinus1 = height - 1,
+      widthMinus1 = width - 1,
+      size = kernelSize + kernelSize + 1,
+      radius = kernelSize + 1,
+      mult = CV.stackBoxBlurMult[kernelSize],
+      shift = CV.stackBoxBlurShift[kernelSize],
+      stack, stackStart, color, sum, pos, start, p, x, y, i;
+
+    stack = stackStart = new CV.BlurStack();
+    for (i = 1; i < size; ++i) {
+      stack = stack.next = new CV.BlurStack();
+    }
+    stack.next = stackStart;
+
+    pos = 0;
+
+    for (y = 0; y < height; ++y) {
+      start = pos;
+
+      color = src[pos];
+      sum = radius * color;
+
+      stack = stackStart;
+      for (i = 0; i < radius; ++i) {
+        stack.color = color;
+        stack = stack.next;
+      }
+      for (i = 1; i < radius; ++i) {
+        stack.color = src[pos + i];
+        sum += stack.color;
+        stack = stack.next;
+      }
+
+      stack = stackStart;
+      for (x = 0; x < width; ++x) {
+        dst[pos++] = (sum * mult) >>> shift;
+
+        p = x + radius;
+        p = start + (p < widthMinus1 ? p : widthMinus1);
+        sum -= stack.color - src[p];
+
+        stack.color = src[p];
+        stack = stack.next;
+      }
+    }
+
+    for (x = 0; x < width; ++x) {
+      pos = x;
+      start = pos + width;
+
+      color = dst[pos];
+      sum = radius * color;
+
+      stack = stackStart;
+      for (i = 0; i < radius; ++i) {
+        stack.color = color;
+        stack = stack.next;
+      }
+      for (i = 1; i < radius; ++i) {
+        stack.color = dst[start];
+        sum += stack.color;
+        stack = stack.next;
+
+        start += width;
+      }
+
+      stack = stackStart;
+      for (y = 0; y < height; ++y) {
+        dst[pos] = (sum * mult) >>> shift;
+
+        p = y + radius;
+        p = x + ((p < heightMinus1 ? p : heightMinus1) * width);
+        sum -= stack.color - dst[p];
+
+        stack.color = dst[p];
+        stack = stack.next;
+
+        pos += width;
+      }
+    }
+
+    return imageDst;
+  };
+
+  CV.gaussianBlur = function(imageSrc, imageDst, imageMean, kernelSize) {
+    var kernel = CV.gaussianKernel(kernelSize);
+
+    imageDst.width = imageSrc.width;
+    imageDst.height = imageSrc.height;
+
+    imageMean.width = imageSrc.width;
+    imageMean.height = imageSrc.height;
+
+    CV.gaussianBlurFilter(imageSrc, imageMean, kernel, true);
+    CV.gaussianBlurFilter(imageMean, imageDst, kernel, false);
+
+    return imageDst;
+  };
+
+  CV.gaussianBlurFilter = function(imageSrc, imageDst, kernel, horizontal) {
+    var src = imageSrc.data,
+      dst = imageDst.data,
+      height = imageSrc.height,
+      width = imageSrc.width,
+      pos = 0,
+      limit = kernel.length >> 1,
+      cur, value, i, j, k;
+
+    for (i = 0; i < height; ++i) {
+
+      for (j = 0; j < width; ++j) {
+        value = 0.0;
+
+        for (k = -limit; k <= limit; ++k) {
+
+          if (horizontal) {
+            cur = pos + k;
+            if (j + k < 0) {
+              cur = pos;
+            } else if (j + k >= width) {
+              cur = pos;
+            }
+          } else {
+            cur = pos + (k * width);
+            if (i + k < 0) {
+              cur = pos;
+            } else if (i + k >= height) {
+              cur = pos;
+            }
+          }
+
+          value += kernel[limit + k] * src[cur];
+        }
+
+        dst[pos++] = horizontal ? value : (value + 0.5) & 0xff;
+      }
+    }
+
+    return imageDst;
+  };
+
+  CV.gaussianKernel = function(kernelSize) {
+    var tab = [
+        [1],
+        [0.25, 0.5, 0.25],
+        [0.0625, 0.25, 0.375, 0.25, 0.0625],
+        [0.03125, 0.109375, 0.21875, 0.28125, 0.21875, 0.109375, 0.03125]
+      ],
+      kernel = [],
+      center, sigma, scale2X, sum, x, i;
+
+    if ((kernelSize <= 7) && (kernelSize % 2 === 1)) {
+      kernel = tab[kernelSize >> 1];
+    } else {
+      center = (kernelSize - 1.0) * 0.5;
+      sigma = 0.8 + (0.3 * (center - 1.0));
+      scale2X = -0.5 / (sigma * sigma);
+      sum = 0.0;
+      for (i = 0; i < kernelSize; ++i) {
+        x = i - center;
+        sum += kernel[i] = Math.exp(scale2X * x * x);
+      }
+      sum = 1 / sum;
+      for (i = 0; i < kernelSize; ++i) {
+        kernel[i] *= sum;
+      }
+    }
+
+    return kernel;
+  };
+
+  CV.findContours = function(imageSrc, binary) {
+    console.log("FIND CONTOURS");
+    var width = imageSrc.width,
+      height = imageSrc.height,
+      contours = [],
+      src, deltas, pos, pix, nbd, outer, hole, i, j;
+
+    src = CV.binaryBorder(imageSrc, binary);
+
+    deltas = CV.neighborhoodDeltas(width + 2);
+
+    pos = width + 3;
+    nbd = 1;
+
+    for (i = 0; i < height; ++i, pos += 2) {
+
+      for (j = 0; j < width; ++j, ++pos) {
+        pix = src[pos];
+
+        if (0 !== pix) {
+          outer = hole = false;
+
+          if (1 === pix && 0 === src[pos - 1]) {
+            outer = true;
+          } else if (pix >= 1 && 0 === src[pos + 1]) {
+            hole = true;
+          }
+
+          if (outer || hole) {
+            ++nbd;
+
+            contours.push(CV.borderFollowing(src, pos, nbd, {
+              x: j,
+              y: i
+            }, hole, deltas));
+          }
+        }
+      }
+    }
+
+    return contours;
+  };
+
+  CV.borderFollowing = function(src, pos, nbd, point, hole, deltas) {
+    var contour = [],
+      pos1, pos3, pos4, s, s_end, s_prev;
+
+    contour.hole = hole;
+
+    s = s_end = hole ? 0 : 4;
+    do {
+      s = (s - 1) & 7;
+      pos1 = pos + deltas[s];
+      if (src[pos1] !== 0) {
+        break;
+      }
+    } while (s !== s_end);
+
+    if (s === s_end) {
+      src[pos] = -nbd;
+      contour.push({
+        x: point.x,
+        y: point.y
+      });
+
+    } else {
+      pos3 = pos;
+      s_prev = s ^ 4;
+
+      while (true) {
+        s_end = s;
+
+        do {
+          pos4 = pos3 + deltas[++s];
+        } while (src[pos4] === 0);
+
+        s &= 7;
+
+        if (((s - 1) >>> 0) < (s_end >>> 0)) {
+          src[pos3] = -nbd;
+        } else if (src[pos3] === 1) {
+          src[pos3] = nbd;
+        }
+
+        contour.push({
+          x: point.x,
+          y: point.y
+        });
+
+        s_prev = s;
+
+        point.x += CV.neighborhood[s][0];
+        point.y += CV.neighborhood[s][1];
+
+        if ((pos4 === pos) && (pos3 === pos1)) {
+          break;
+        }
+
+        pos3 = pos4;
+        s = (s + 4) & 7;
+      }
+    }
+
+    return contour;
+  };
+
+  CV.neighborhood = [
+    [1, 0],
+    [1, -1],
+    [0, -1],
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, 1],
+    [1, 1]
+  ];
+
+  CV.neighborhoodDeltas = function(width) {
+    var deltas = [],
+      len = CV.neighborhood.length,
+      i = 0;
+
+    for (; i < len; ++i) {
+      deltas[i] = CV.neighborhood[i][0] + (CV.neighborhood[i][1] * width);
+    }
+
+    return deltas.concat(deltas);
+  };
+
+  CV.approxPolyDP = function(contour, epsilon) {
+    var slice = {
+        start_index: 0,
+        end_index: 0
+      },
+      right_slice = {
+        start_index: 0,
+        end_index: 0
+      },
+      poly = [],
+      stack = [],
+      len = contour.length,
+      pt, start_pt, end_pt, dist, max_dist, le_eps,
+      dx, dy, i, j, k;
+
+    epsilon *= epsilon;
+
+    k = 0;
+
+    for (i = 0; i < 3; ++i) {
+      max_dist = 0;
+
+      k = (k + right_slice.start_index) % len;
+      start_pt = contour[k];
+      if (++k === len) {
+        k = 0;
+      }
+
+      for (j = 1; j < len; ++j) {
+        pt = contour[k];
+        if (++k === len) {
+          k = 0;
+        }
+
+        dx = pt.x - start_pt.x;
+        dy = pt.y - start_pt.y;
+        dist = dx * dx + dy * dy;
+
+        if (dist > max_dist) {
+          max_dist = dist;
+          right_slice.start_index = j;
+        }
+      }
+    }
+
+    if (max_dist <= epsilon) {
+      poly.push({
+        x: start_pt.x,
+        y: start_pt.y
+      });
+
+    } else {
+      slice.start_index = k;
+      slice.end_index = (right_slice.start_index += slice.start_index);
+
+      right_slice.start_index -= right_slice.start_index >= len ? len : 0;
+      right_slice.end_index = slice.start_index;
+      if (right_slice.end_index < right_slice.start_index) {
+        right_slice.end_index += len;
+      }
+
+      stack.push({
+        start_index: right_slice.start_index,
+        end_index: right_slice.end_index
+      });
+      stack.push({
+        start_index: slice.start_index,
+        end_index: slice.end_index
+      });
+    }
+
+    while (stack.length !== 0) {
+      slice = stack.pop();
+
+      end_pt = contour[slice.end_index % len];
+      start_pt = contour[k = slice.start_index % len];
+      if (++k === len) {
+        k = 0;
+      }
+
+      if (slice.end_index <= slice.start_index + 1) {
+        le_eps = true;
+
+      } else {
+        max_dist = 0;
+
+        dx = end_pt.x - start_pt.x;
+        dy = end_pt.y - start_pt.y;
+
+        for (i = slice.start_index + 1; i < slice.end_index; ++i) {
+          pt = contour[k];
+          if (++k === len) {
+            k = 0;
+          }
+
+          dist = Math.abs((pt.y - start_pt.y) * dx - (pt.x - start_pt.x) * dy);
+
+          if (dist > max_dist) {
+            max_dist = dist;
+            right_slice.start_index = i;
+          }
+        }
+
+        le_eps = max_dist * max_dist <= epsilon * (dx * dx + dy * dy);
+      }
+
+      if (le_eps) {
+        poly.push({
+          x: start_pt.x,
+          y: start_pt.y
+        });
+
+      } else {
+        right_slice.end_index = slice.end_index;
+        slice.end_index = right_slice.start_index;
+
+        stack.push({
+          start_index: right_slice.start_index,
+          end_index: right_slice.end_index
+        });
+        stack.push({
+          start_index: slice.start_index,
+          end_index: slice.end_index
+        });
+      }
+    }
+
+    return poly;
+  };
+
+  CV.warp = function(imageSrc, imageDst, contour, warpSize) {
+    var src = imageSrc.data,
+      dst = imageDst.data,
+      width = imageSrc.width,
+      height = imageSrc.height,
+      pos = 0,
+      sx1, sx2, dx1, dx2, sy1, sy2, dy1, dy2, p1, p2, p3, p4,
+      m, r, s, t, u, v, w, x, y, i, j;
+
+    m = CV.getPerspectiveTransform(contour, warpSize - 1);
+
+    r = m[8];
+    s = m[2];
+    t = m[5];
+
+    for (i = 0; i < warpSize; ++i) {
+      r += m[7];
+      s += m[1];
+      t += m[4];
+
+      u = r;
+      v = s;
+      w = t;
+
+      for (j = 0; j < warpSize; ++j) {
+        u += m[6];
+        v += m[0];
+        w += m[3];
+
+        x = v / u;
+        y = w / u;
+
+        sx1 = x >>> 0;
+        sx2 = (sx1 === width - 1) ? sx1 : sx1 + 1;
+        dx1 = x - sx1;
+        dx2 = 1.0 - dx1;
+
+        sy1 = y >>> 0;
+        sy2 = (sy1 === height - 1) ? sy1 : sy1 + 1;
+        dy1 = y - sy1;
+        dy2 = 1.0 - dy1;
+
+        p1 = p2 = sy1 * width;
+        p3 = p4 = sy2 * width;
+
+        dst[pos++] =
+          (dy2 * (dx2 * src[p1 + sx1] + dx1 * src[p2 + sx2]) +
+            dy1 * (dx2 * src[p3 + sx1] + dx1 * src[p4 + sx2])) & 0xff;
+
+      }
+    }
+
+    imageDst.width = warpSize;
+    imageDst.height = warpSize;
+
+    return imageDst;
+  };
+
+  CV.getPerspectiveTransform = function(src, size) {
+    var rq = CV.square2quad(src);
+
+    rq[0] /= size;
+    rq[1] /= size;
+    rq[3] /= size;
+    rq[4] /= size;
+    rq[6] /= size;
+    rq[7] /= size;
+
+    return rq;
+  };
+
+  CV.square2quad = function(src) {
+    var sq = [],
+      px, py, dx1, dx2, dy1, dy2, den;
+
+    px = src[0].x - src[1].x + src[2].x - src[3].x;
+    py = src[0].y - src[1].y + src[2].y - src[3].y;
+
+    if (0 === px && 0 === py) {
+      sq[0] = src[1].x - src[0].x;
+      sq[1] = src[2].x - src[1].x;
+      sq[2] = src[0].x;
+      sq[3] = src[1].y - src[0].y;
+      sq[4] = src[2].y - src[1].y;
+      sq[5] = src[0].y;
+      sq[6] = 0;
+      sq[7] = 0;
+      sq[8] = 1;
+
+    } else {
+      dx1 = src[1].x - src[2].x;
+      dx2 = src[3].x - src[2].x;
+      dy1 = src[1].y - src[2].y;
+      dy2 = src[3].y - src[2].y;
+      den = dx1 * dy2 - dx2 * dy1;
+
+      sq[6] = (px * dy2 - dx2 * py) / den;
+      sq[7] = (dx1 * py - px * dy1) / den;
+      sq[8] = 1;
+      sq[0] = src[1].x - src[0].x + sq[6] * src[1].x;
+      sq[1] = src[3].x - src[0].x + sq[7] * src[3].x;
+      sq[2] = src[0].x;
+      sq[3] = src[1].y - src[0].y + sq[6] * src[1].y;
+      sq[4] = src[3].y - src[0].y + sq[7] * src[3].y;
+      sq[5] = src[0].y;
+    }
+
+    return sq;
+  };
+
+  CV.isContourConvex = function(contour) {
+    var orientation = 0,
+      convex = true,
+      len = contour.length,
+      i = 0,
+      j = 0,
+      cur_pt, prev_pt, dxdy0, dydx0, dx0, dy0, dx, dy;
+
+    prev_pt = contour[len - 1];
+    cur_pt = contour[0];
+
+    dx0 = cur_pt.x - prev_pt.x;
+    dy0 = cur_pt.y - prev_pt.y;
+
+    for (; i < len; ++i) {
+      if (++j === len) {
+        j = 0;
+      }
+
+      prev_pt = cur_pt;
+      cur_pt = contour[j];
+
+      dx = cur_pt.x - prev_pt.x;
+      dy = cur_pt.y - prev_pt.y;
+      dxdy0 = dx * dy0;
+      dydx0 = dy * dx0;
+
+      orientation |= dydx0 > dxdy0 ? 1 : (dydx0 < dxdy0 ? 2 : 3);
+
+      if (3 === orientation) {
+        convex = false;
+        break;
+      }
+
+      dx0 = dx;
+      dy0 = dy;
+    }
+
+    return convex;
+  };
+
+  CV.perimeter = function(poly) {
+    var len = poly.length,
+      i = 0,
+      j = len - 1,
+      p = 0.0,
+      dx, dy;
+
+    for (; i < len; j = i++) {
+      dx = poly[i].x - poly[j].x;
+      dy = poly[i].y - poly[j].y;
+
+      p += Math.sqrt(dx * dx + dy * dy);
+    }
+
+    return p;
+  };
+
+  CV.minEdgeLength = function(poly) {
+    var len = poly.length,
+      i = 0,
+      j = len - 1,
+      min = Infinity,
+      d, dx, dy;
+
+    for (; i < len; j = i++) {
+      dx = poly[i].x - poly[j].x;
+      dy = poly[i].y - poly[j].y;
+
+      d = dx * dx + dy * dy;
+
+      if (d < min) {
+        min = d;
+      }
+    }
+
+    return Math.sqrt(min);
+  };
+
+  CV.countNonZero = function(imageSrc, square) {
+    var src = imageSrc.data,
+      height = square.height,
+      width = square.width,
+      pos = square.x + (square.y * imageSrc.width),
+      span = imageSrc.width - width,
+      nz = 0,
+      i, j;
+
+    for (i = 0; i < height; ++i) {
+
+      for (j = 0; j < width; ++j) {
+
+        if (0 !== src[pos++]) {
+          ++nz;
+        }
+      }
+
+      pos += span;
+    }
+
+    return nz;
+  };
+
+  CV.binaryBorder = function(imageSrc, dst) {
+    var src = imageSrc.data,
+      height = imageSrc.height,
+      width = imageSrc.width,
+      posSrc = 0,
+      posDst = 0,
+      i, j;
+
+    for (j = -2; j < width; ++j) {
+      dst[posDst++] = 0;
+    }
+
+    for (i = 0; i < height; ++i) {
+      dst[posDst++] = 0;
+
+      for (j = 0; j < width; ++j) {
+        dst[posDst++] = (0 === src[posSrc++] ? 0 : 1);
+      }
+
+      dst[posDst++] = 0;
+    }
+
+    for (j = -2; j < width; ++j) {
+      dst[posDst++] = 0;
+    }
+
+    return dst;
+  };
+  return function(){
+    return CV;
+  };
+});
+
+define('services/JSFeatService',[], function() {
+  
+  var factory = function($log) {
+    function getMatrix(columns, rows, dataType) {
+      columns = columns | 640;
+      rows = rows | 480;
+      dataType = dataType | jsfeat.U8_t | jsfeat.C1_t;
+      return new jsfeat.matrix_t(columns, rows, dataType);
+    }
+    
+    function grayScale(imageData, width, height, imgU8, code) {
+      code = code || jsfeat.COLOR_RGBA2GRAY;
+      jsfeat.imgproc.grayscale(imageData.data, width, height, imgU8, code);
+      return {
+        imageData: imageData,
+        imgU8: imgU8
+      };
+    }
+    return {
+      getMatrix: getMatrix,
+      grayScale: grayScale
+    };
+  };
+
+  factory.$inject = ['$log'];
+  return factory;
+});
+
+define('services/FileReaderService',['angular'], function(angular) {
+  
+
+  var factory = function($q) {
+
+    var onLoad = function(reader, deferred, scope) {
+      return function() {
+        scope.$apply(function() {
+          deferred.resolve(reader.result);
+        });
+      };
+    };
+
+    var onError = function(reader, deferred, scope) {
+      return function() {
+        scope.$apply(function() {
+          deferred.reject(reader.result);
+        });
+      };
+    };
+
+    var onProgress = function(reader, scope) {
+      return function(event) {
+        scope.$broadcast("fileProgress", {
+          total: event.total,
+          loaded: event.loaded
+        });
+      };
+    };
+
+    var getReader = function(deferred, scope) {
+      var reader = new FileReader();
+      reader.onload = onLoad(reader, deferred, scope);
+      reader.onerror = onError(reader, deferred, scope);
+      reader.onprogress = onProgress(reader, scope);
+      return reader;
+    };
+
+    var readAsDataURL = function(file, scope) {
+      var deferred = $q.defer();
+
+      var reader = getReader(deferred, scope);
+      reader.readAsDataURL(file);
+
+      return deferred.promise;
+    };
+
+    return {
+      readAsDataUrl: readAsDataURL
+    };
+  };
+
+  factory.$inject = ['$q'];
   return factory;
 });
 
@@ -12943,15 +14230,19 @@ define('services/TreeService',['angular'], function(angular) {
   return factory;
 });
 
-define('services/services',['require','angular','services/CameraService','services/RestAPIService','services/JSFeatService','services/TreeService'],function(require) {
+define('services/services',['require','angular','services/RestAPIService','services/CameraService','services/CanvasService','services/ContoursService','services/CVService','services/JSFeatService','services/FileReaderService','services/TreeService'],function(require) {
   
 
   var angular = require('angular'),
     services = angular.module('listy.services', ['restangular']);
 
-  services.service('CameraService', require('services/CameraService'));
   services.service('api', require('services/RestAPIService'));
-  services.service('feat', require('services/JSFeatService'));
+  services.service('Camera', require('services/CameraService'));
+  services.service('Canvas', require('services/CanvasService'));
+  services.service('Contours', require('services/ContoursService'));
+  services.service('CV', require('services/CVService'));
+  services.service('Feat', require('services/JSFeatService'));
+  services.service('FileReader', require('services/FileReaderService'));
   services.service('TreeService', require('services/TreeService'));
 
   return services;
@@ -18625,6 +19916,7 @@ define('app',[
   'angular',
   'uiRouter',
   'controllers',
+  'directives/directives',
   'services/services',
   'ionicAngular',
   'jsfeat'
@@ -18646,7 +19938,7 @@ define('app',[
   // the 2nd parameter is an array of 'requires'
   // 'listy.services' is found in services.js
   // 'listy.controllers' is found in controllers.js
-  angular.module('listy', ['ionic', 'listy.controllers', 'listy.services', 'ui.router', 'restangular'])
+  angular.module('listy', ['ionic', 'listy.controllers', 'listy.directives', 'listy.services', 'ui.router', 'restangular'])
 
   .run(function($ionicPlatform) {
       $ionicPlatform.ready(function() {
