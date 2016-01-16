@@ -14,7 +14,7 @@ define([], function() {
     this.bColor; // background color
     this.threshold;
     //this.maxContourPoints = Infinity; //was 500*4
-    this.maxContourPoints = 500 * 10;
+    this.maxContourPoints = 500 * 500;
     this.allContours = [];
 
     this.offset4 = function(x, y) {
@@ -48,6 +48,7 @@ define([], function() {
 
 
     this.findContours = function(image, foregroundColor, backgroundColor, threshold) {
+      this.allContours = [];
       var w = this.pixelsWidth = image.width;
       var h = this.pixelsHeight = image.height;
       this.fColor = foregroundColor;
@@ -57,34 +58,23 @@ define([], function() {
       // create a new pixel array
       var imageCtx = image.getContext('2d');
       var imageData = imageCtx.getImageData(0, 0, w, h);
-      //console.log("imageData: ",imageData);
+      // console.log("imageData: ",imageData);
       var pixels = this.pixels = imageData.data;
-      //console.log("pixels: ",pixels);
+      // console.log("pixels: ",pixels);
       var prevValue = 0;
 
       for (var y = 0; y < h; y++) {
         for (var x = 0; x < w; x++) {
           var pix = this.getPixel(x, y);
           var factor = ((pix.r * .3 + pix.g * .59 + pix.b * .11))
-            //console.log(index+": "+r+" "+" "+g+" "+b+" "+a);
 
-          //var value = g;
           var value = (factor > threshold) ? 255 : 0; // threshold
 
-          //console.log(" > "+value);
 
           //this.setPixel(x, y, { r: value, g: value, b: value, a: pix.a });
           this.setPixel(x, y, [value, value, value, pix.a]);
-          //				pixels[index].r = value;
-          //				pixels[index].g = value;
-          //				pixels[index].b = value;
-          //				//pixels[index].a = value;
         }
       }
-
-      // copy the image data back onto the canvas
-      //imageCtx.putImageData(imageData, 0, 0); // at coords 0,0
-      //return;
 
       for (var y = 0; y < h; y++) {
         for (var x = 0; x < w; x++) {
@@ -99,6 +89,7 @@ define([], function() {
               y: y
             });
             this.allContours.push(points);
+            return this.allContours;
           }
 
           //pix.r = 255;
@@ -144,16 +135,16 @@ define([], function() {
 
       // copy the image data back onto the canvas
       imageCtx.putImageData(imageData, 0, 0); // at coords 0,0
+      return this.allContours;
     };
 
     this.followContour = function(startPoint) {
-      //		console.log("followContour @",startPoint);
-      points = []; // start new contour
+      //console.log("followContour @",startPoint);
+      var points = []; // start new contour
       points.push(startPoint);
       var w = this.pixelsWidth;
       var h = this.pixelsHeight;
 
-      //console.log("w :",w," h: ",h);
 
       var point = startPoint;
       var numPoints = 0;
@@ -276,7 +267,7 @@ define([], function() {
     };
 
     this.closeContour = function(points) {
-			console.log("CLOSE");
+			//console.log("CLOSE");
       //console.log("pixels: ",this.pixels);
     };
 
