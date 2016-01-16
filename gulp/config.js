@@ -9,11 +9,12 @@ module.exports = {
         }
     },
     copy: {
+        index: src + '/index.html',
         src: [
             src + '/lib/**',
             src + '/locale/**',
             src + '/templates/**/*.html',
-            src + '/index.html'
+            src + '/css/**'
         ],
         dest: dest
     },
@@ -55,7 +56,7 @@ module.exports = {
     sass: {
         src: src + '/scss/ionic.app.scss',
         watch: src + '/scss/**/*.scss',
-        dest: dest + '/css',
+        dest: src + '/css',
         settings: {
             imagePath: 'images' // Used by the image-url helper
         }
