@@ -18,9 +18,14 @@ define([], function() {
     function canny(imageData, width, height, imgU8, options) {
       var r = options.blurRadius | 0;
       var kernelSize = (r + 1) << 1;
+      var r2 = options.blurRadius2 | 0;
+      var kernelSize2 = (r2 + 1) << 1;
+
       jsfeat.imgproc.grayscale(imageData.data, width, height, imgU8);
       jsfeat.imgproc.gaussian_blur(imgU8, imgU8, kernelSize, 0);
       jsfeat.imgproc.canny(imgU8, imgU8, options.lowThreshold, options.highThreshold);
+      jsfeat.imgproc.gaussian_blur(imgU8, imgU8, kernelSize2, 0);
+
       return {
         imageData: imageData,
         imgU8: imgU8
