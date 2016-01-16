@@ -3,7 +3,8 @@
   "private": "true",
   "dependencies": {
     "ionic": "driftyco/ionic-bower#1.1.1",
-    "jsfeat": "~0.0.8"
+    "jsfeat": "~0.0.8",
+    "fastclick": "~1.0.6"
   },
   "devDependencies": {
     "requirejs": "~2.1.22"

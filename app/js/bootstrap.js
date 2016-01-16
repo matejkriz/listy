@@ -6,14 +6,21 @@ define([
   'ionic',
   'angular',
   'app',
+  'fastclick',
+  'jquery',
+  'lodash',
   'restangular'
 ], function(
   ionic,
   angular,
-  app
+  app,
+  FastClick,
+  $,
+  _
 ) {
   'use strict';
   angular.element(document).ready(function() {
     angular.bootstrap(document, ['listy']);
+    FastClick.attach(document.body);
   });
 });

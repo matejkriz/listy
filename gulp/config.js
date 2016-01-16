@@ -5,7 +5,7 @@ module.exports = {
     browserSync: {
         server: {
             // Serve up our build folder
-            baseDir: dest
+            baseDir: src
         }
     },
     copy: {
@@ -60,5 +60,10 @@ module.exports = {
         settings: {
             imagePath: 'images' // Used by the image-url helper
         }
+    },
+    server: {
+        root: src,
+        livereload: true,
+        defaultPort: 3042
     }
 };
