@@ -4,14 +4,22 @@
     <button class="button icon-left ion-camera button-block button-positive" ng-click="takePicture()">
       Pořídit fotku
     </button>
+
+    <div class="list">
+      <div class="item range range-positive">
+        <i class="icon ion-contrast"></i>
+        <input type="range" ng-model="options.blurRadius" ng-change="reprocessCanny()" name="volume" min="0" max="20">
+        <i class="icon ion-waterdrop"></i>
+      </div>
+    </div>
+
+    <canvas id="previewCanvas" width="480" height="480"></canvas>
+    <canvas id="cannyCanvas" width="480" height="480"></canvas>
+    <!-- <canvas id="bwCanvas" width="480" height="480"></canvas> -->
     <form>
-        <input type="file" ng-file-select>
-   </form>
-   <b>Náhled:</b><br />
-   <i ng-hide="imageSrc">No image choosed</i>
-
-   <canvas id="previewCanvas" width="480" height="480"></canvas>
-   <canvas id="bwCanvas" width="480" height="480"></canvas>
-
+      <input type="file" ng-file-select>
+    </form>
+    <b>Náhled:</b><br/>
+    <i ng-hide="imageSrc">No image choosed</i>
   </ion-content>
 </ion-view>
