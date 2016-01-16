@@ -1,3 +1,8 @@
+define([
+  'angular'
+], function(
+  angular
+) {
 angular.module('listy.controllers', [])
 
 .controller('DashCtrl', ['$scope', 'Camera', 'Canvas', 'api', 'Feat', 'FileReader', 'Contours', 'CV', function($scope, Camera, Canvas, api, Feat, FileReader, Contours, CV) {
@@ -68,4 +73,5 @@ angular.module('listy.controllers', [])
   $scope.settings = {
     enableFriends: true
   };
+});
 });

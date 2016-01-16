@@ -4,5 +4,8 @@
   "dependencies": {
     "ionic": "driftyco/ionic-bower#1.1.1",
     "jsfeat": "~0.0.8"
+  },
+  "devDependencies": {
+    "requirejs": "~2.1.22"
   }
 }

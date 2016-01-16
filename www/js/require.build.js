@@ -335,13 +335,15 @@ angular.module('listy.controllers', [])
 .controller('DashCtrl', ['$scope', 'Camera', 'Canvas', 'api', 'Feat', 'FileReader', 'Contours', 'CV', function($scope, Camera, Canvas, api, Feat, FileReader, Contours, CV) {
   //Contours.closeContour();
   //CV.findContours();
+  alert('fuck');
   $scope.getFile = function(file) {
     FileReader.readAsDataUrl(file, $scope)
       .then(function(result) {
         $scope.imageSrc = result;
-        drawImage(result, 'previewCanvas', 480, 480);
+        drawImages(result, 'previewCanvas', 480, 480);
       });
   };
+
   $scope.takePicture = function() {
     console.log('takePicture!');
     Camera.takePicture().then(function(neco) {
@@ -351,7 +353,7 @@ angular.module('listy.controllers', [])
     });
   };
 
-  function drawImage(image, canvasID, width, height) {
+  function drawImages(image, canvasID, width, height) {
     var ctx = Canvas.getContext(canvasID);
 
     var img = new Image();
@@ -361,7 +363,9 @@ angular.module('listy.controllers', [])
       ctx.drawImage(img, 0, 0);
 
       var imageData = ctx.getImageData(0, 0, width, height);
+      var imageData2 = ctx.getImageData(0, 0, width, height);
       drawBW(imageData, width, height, 'bwCanvas');
+      drawCanny(imageData2, width, height, 'cannyCanvas');
 
     };
     img.src = image;
@@ -371,9 +375,25 @@ angular.module('listy.controllers', [])
     var imgU8 = Feat.getMatrix(width, height);
     var ctx = Canvas.getContext(canvasID);
 
-    var imgBW = Feat.grayScale(imageData, width, height, imgU8);
+    var imgResult = Feat.grayScale(imageData, width, height, imgU8);
 
-    Canvas.renderImageData(imgBW.imageData, imgBW.imgU8, ctx);
+    Canvas.renderImageData(imgResult.imageData, imgResult.imgU8, ctx);
+    return imgResult;
+  }
+
+  function drawCanny(imageData, width, height, canvasID) {
+    var imgU8 = Feat.getMatrix(width, height);
+    var ctx = Canvas.getContext(canvasID);
+    var options = {
+      lowThreshold: 20,
+      highThreshold: 50,
+      blurRadius: 2
+    };
+
+    var imgResult = Feat.canny(imageData, width, height, imgU8, options);
+
+    Canvas.renderImageData(imgResult.imageData, imgResult.imgU8, ctx);
+    return imgResult;
   }
 }])
 
@@ -12934,6 +12954,7 @@ define('services/CanvasService',[], function() {
     }
 
     function renderImageData(imageData, imgU8, context2D){
+      console.log("renderImageData context2D = ", context2D);
       // render result back to canvas
       var dataU32 = new Uint32Array(imageData.data.buffer);
       var alpha = (0xff << 24);
@@ -14094,15 +14115,39 @@ define('services/JSFeatService',[], function() {
   
   var factory = function($log) {
     function getMatrix(columns, rows, dataType) {
-      columns = columns | 640;
-      rows = rows | 480;
+      console.log("getMatrix 1 columns, rows = ", columns, ', ', rows);
+      //columns = columns | 640;
+      //rows = rows | 480;
+      console.log("getMatrix 2 columns, rows = ", columns, ', ', rows);
       dataType = dataType | jsfeat.U8_t | jsfeat.C1_t;
       return new jsfeat.matrix_t(columns, rows, dataType);
     }
-    
+
     function grayScale(imageData, width, height, imgU8, code) {
+      console.log("grayScale");
       code = code || jsfeat.COLOR_RGBA2GRAY;
       jsfeat.imgproc.grayscale(imageData.data, width, height, imgU8, code);
+      console.log("grayScale imageData = ", imageData);
+      console.log("grayScale imgU8 = ", imgU8);
+      return {
+        imageData: imageData,
+        imgU8: imgU8
+      };
+    }
+
+    function canny(imageData, width, height, imgU8, options) {
+      console.log("canny");
+      console.log("width, height = ", width, ", ", height);
+      var r = options.blurRadius | 0;
+      var kernelSize = (r + 1) << 1;
+      console.log("canny 1 imgU8 = ", imgU8);
+      jsfeat.imgproc.grayscale(imageData.data, width, height, imgU8);
+      console.log("canny 2 imgU8 = ", imgU8);
+      jsfeat.imgproc.gaussian_blur(imgU8, imgU8, kernelSize, 0);
+      console.log("canny 3 imgU8 = ", imgU8);
+      jsfeat.imgproc.canny(imageData.data, imgU8, options.lowThreshold, options.highThreshold);
+      console.log("canny imageData = ", imageData);
+      console.log("canny 4 imgU8 = ", imgU8);
       return {
         imageData: imageData,
         imgU8: imgU8
@@ -14110,7 +14155,8 @@ define('services/JSFeatService',[], function() {
     }
     return {
       getMatrix: getMatrix,
-      grayScale: grayScale
+      grayScale: grayScale,
+      canny: canny
     };
   };
 
