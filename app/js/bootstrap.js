@@ -6,7 +6,6 @@ define([
   'ionic',
   'angular',
   'app',
-  'fastclick',
   'jquery',
   'lodash',
   'restangular'
@@ -14,13 +13,11 @@ define([
   ionic,
   angular,
   app,
-  FastClick,
   $,
   _
 ) {
   'use strict';
   angular.element(document).ready(function() {
     angular.bootstrap(document, ['listy']);
-    FastClick.attach(document.body);
   });
 });
