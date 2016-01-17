@@ -36,7 +36,7 @@
       drawImages('img/test.jpg', 'previewCanvas');
 
       function getFile(file) {
-        FileReader.readAsDataUrl(file, vm)
+        FileReader.readAsDataUrl(file, $scope)
           .then(function(result) {
             vm.imageSrc = result;
             // console.log("result = ", result);
@@ -65,7 +65,6 @@
           height = vm.canvas.height;
           previewCtx.canvas.height = height;
           if (!!cannyCtx) {
-            console.log("resize canny");
             cannyCtx.canvas.height = height;
             Canvas.canvasClear(cannyCtx);
           }
