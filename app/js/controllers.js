@@ -142,9 +142,9 @@ define([
 
       var centerPoint = Canvas.getCenter($scope.contours[0]);
       Canvas.drawPoint(cannyCtx, centerPoint);
-      var path = Canvas.getPath($scope.contours[0], centerPoint, $scope.options.pathHeight)
+      var path = Canvas.getPath($scope.contours[0], centerPoint)
       Canvas.canvasClear(pathCtx)
-      Canvas.drawPath(pathCtx, path, 'blue', $scope.options.pathLength, true);
+      Canvas.drawPath(pathCtx, path, 'blue', 1, $scope.options.pathLength, $scope.options.pathHeight, true);
 
       //console.log("path = ", path);
       // console.log("centerPoint = ", centerPoint);
@@ -164,7 +164,7 @@ define([
       }
       //cannyCtx.drawImage(canny.imageData, 0, 0);
       for (var i = $scope.options.from; i < $scope.options.to; i++) {
-        Canvas.drawPath(cannyCtx, $scope.contours[i]);
+        Canvas.drawPath(cannyCtx, $scope.contours[i], 'green', 3);
       }
     };
 
