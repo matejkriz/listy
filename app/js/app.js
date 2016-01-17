@@ -37,7 +37,8 @@
         });
       })
       .constant('API', {
-        url: 'http://localhost:3000/api'
+        url: 'http://localhost:3000/api/',
+        images: 'http://localhost:3000/images/'
       })
 
     .config(function($stateProvider, $urlRouterProvider) {
@@ -84,7 +85,7 @@
               controller: 'treeDetailCtrl as vm'
             }
           }
-        })
+        });
 
       // if none of the above states are matched, use this as the fallback
       $urlRouterProvider.otherwise('/tab/recognize');

@@ -2,6 +2,9 @@
   "name": "listy",
   "version": "1.1.1",
   "description": "listy: An Ionic project",
+  "scripts": {
+    "start": "mongod & node ./server/bin/www & gulp "
+  },
   "dependencies": {
     "jquery": "^2.1.4",
     "lodash": "^3.10.1",
