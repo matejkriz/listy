@@ -340,40 +340,72 @@ define('controllers',[
   .controller('DashCtrl', ['$scope', 'Camera', 'Canvas', 'api', 'Feat', 'FileReader', 'Contours', 'CV', function($scope, Camera, Canvas, api, Feat, FileReader, Contours, CV) {
     //Contours.closeContour();
     //CV.findContours();
-    alert('fuck IT');
+    $scope.reprocessCanny = reprocessCanny;
+    $scope.drawContoursPaths = drawContoursPaths;
+
+    $scope.options = {
+      blurRadius: 8,
+      blurRadius2: 8,
+      from: 0,
+      to: 10,
+      pathLength: 1600,
+      treshold: 10
+    };
+
     $scope.getFile = function(file) {
       FileReader.readAsDataUrl(file, $scope)
         .then(function(result) {
           $scope.imageSrc = result;
-          drawImages(result, 'previewCanvas', 480, 480);
+          // console.log("result = ", result);
+          drawImages(result, 'previewCanvas');
         });
     };
 
     $scope.takePicture = function() {
-      console.log('takePicture!');
+      // console.log('takePicture!');
       Camera.takePicture().then(function(neco) {
         setTimeout(function() {
-          console.log('neco = ', neco);
+          // console.log('neco = ', neco);
         }, 0);
       });
     };
 
-    function drawImages(image, canvasID, width, height) {
-      var ctx = Canvas.getContext(canvasID);
+    var previewCtx;
+    var width;
+    var height;
+    var imgPreview;
+    var canny;
+    drawImages('img/test.jpg', 'previewCanvas');
+
+    function drawImages(image, canvasID) {
+      previewCtx = Canvas.getContext(canvasID);
+      Canvas.canvasClear(previewCtx);
 
       var img = new Image();
       img.onload = function() {
         width = img.width;
         height = img.height;
-        ctx.drawImage(img, 0, 0);
+        imgPreview = img;
+        previewCtx.drawImage(imgPreview, 0, 0);
 
-        var imageData = ctx.getImageData(0, 0, width, height);
-        var imageData2 = ctx.getImageData(0, 0, width, height);
-        drawBW(imageData, width, height, 'bwCanvas');
-        drawCanny(imageData2, width, height, 'cannyCanvas');
+        var imageData = previewCtx.getImageData(0, 0, width, height);
+        //drawBW(imageData, width, height, 'bwCanvas');
+        canny = drawCanny(imageData, width, height, 'cannyCanvas');
+
+        drawContours(canny);
 
       };
       img.src = image;
+    }
+
+    function getLongest(arrayOfArrays){
+      var indexOfLongest = 0;
+      for (var i = 0; i < arrayOfArrays.length; i++) {
+        if(arrayOfArrays[indexOfLongest].length < arrayOfArrays[i].length){
+          indexOfLongest = i;
+        }
+      }
+      return [arrayOfArrays[indexOfLongest]];
     }
 
     function drawBW(imageData, width, height, canvasID) {
@@ -385,14 +417,17 @@ define('controllers',[
       Canvas.renderImageData(imgResult.imageData, imgResult.imgU8, ctx);
       return imgResult;
     }
-
+    var cannyCtx;
     function drawCanny(imageData, width, height, canvasID) {
       var imgU8 = Feat.getMatrix(width, height);
       var ctx = Canvas.getContext(canvasID);
+      Canvas.canvasClear(ctx);
+      cannyCtx = ctx;
       var options = {
-        lowThreshold: 20,
-        highThreshold: 50,
-        blurRadius: 2
+        lowThreshold: 10,
+        highThreshold: 100,
+        blurRadius: $scope.options.blurRadius,
+        blurRadius2: $scope.options.blurRadius2
       };
 
       var imgResult = Feat.canny(imageData, width, height, imgU8, options);
@@ -400,6 +435,54 @@ define('controllers',[
       Canvas.renderImageData(imgResult.imageData, imgResult.imgU8, ctx);
       return imgResult;
     }
+
+    function reprocessCanny() {
+      var imageData = previewCtx.getImageData(0, 0, width, height);
+      canny = drawCanny(imageData, width, height, 'cannyCanvas');
+      drawContours(canny);
+    }
+
+    function drawContours(canny) {
+      var ctCtx = Canvas.getContext('cannyCanvas');
+      var pathCtx = Canvas.getContext('pathCanvas');
+      Canvas.canvasClear(ctCtx);
+      Canvas.canvasClear(pathCtx);
+      Canvas.renderImageData(canny.imageData, canny.imgU8, ctCtx);
+      var cannyCanvas = document.getElementById('cannyCanvas');
+      var contours = Contours.findContours(cannyCanvas, 100, 0, $scope.options.treshold);
+      // console.log("contours = ", contours);
+      $scope.contours = Contours.findContours(cannyCanvas, 255, 0, 125);
+
+      //$scope.contours = getLongest($scope.contours);
+
+      var centerPoint = Canvas.getCenter($scope.contours[0]);
+      Canvas.drawPoint(cannyCtx, centerPoint);
+      var path = Canvas.getPath($scope.contours[0], centerPoint, 400)
+      Canvas.canvasClear(pathCtx)
+      Canvas.drawPath(pathCtx, path, 'blue', $scope.options.pathLength, true);
+
+      //console.log("path = ", path);
+      // console.log("centerPoint = ", centerPoint);
+      // console.log("$scope.contours = ", $scope.contours);
+      drawContoursPaths();
+    }
+
+    function drawContoursPaths(){
+      if($scope.contours.length > 0 && $scope.options.to > $scope.contours.length){
+        $scope.options.to = $scope.contours.length;
+      }
+      if($scope.options.from >= $scope.options.to) {
+        $scope.options.from = $scope.options.to - 1;
+      }
+      if($scope.options.from < 0){
+        $scope.options.from = 0;
+      }
+      //cannyCtx.drawImage(canny.imageData, 0, 0);
+      for (var i = $scope.options.from; i < $scope.options.to ; i++) {
+        Canvas.drawPath(cannyCtx, $scope.contours[i]);
+      }
+    };
+
   }])
 
   .controller('ChatsCtrl', function($scope, TreeService) {
@@ -12952,13 +13035,82 @@ define('services/CameraService',['angular'], function(angular) {
 define('services/CanvasService',[], function() {
   
   var factory = function($log) {
+    function canvasClear(ctx) {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+
+    function drawPath(ctx, path, color, length, isFunction) {
+      ctx.beginPath();
+      var zero = ctx.canvas.height;
+      if (isFunction) {
+        ctx.moveTo(path[0].x, zero - path[0].y);
+      } else {
+        ctx.moveTo(path[0].x, path[0].y);
+      }
+      var step = length ? (path.length / length) : 1;
+      // console.log("path = ", path);
+      // console.log("length = ", length);
+      // console.log("step = ", step);
+      for (var i = 1; i < path.length; i++) {
+        if (isFunction) {
+          ctx.lineTo(path[i].x / step, zero - path[i].y);
+        } else {
+          ctx.lineTo(path[i].x / step, path[i].y);
+        }
+      }
+      ctx.strokeStyle = color || 'green';
+      ctx.stroke();
+    }
+
+    function drawPoint(ctx, point, color) {
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
+      ctx.strokeStyle = color || 'red';
+      ctx.stroke();
+    }
+
+    function getCenter(points) {
+      var x = 0;
+      var y = 0;
+      for (var i = 0; i < points.length; i++) {
+        x += points[i].x;
+        y += points[i].y;
+      }
+      return {
+        x: Math.round(x / points.length),
+        y: Math.round(y / points.length)
+      };
+    }
+
+    function getDistance(A, B) {
+      return Math.sqrt(Math.pow(A.x - B.x, 2) + Math.pow(A.y - B.y, 2));
+    }
+
+    function getPath(points, center, height) {
+      height = height || 400;
+      var path = [];
+      var maxDist = 0;
+      var dist = 0;
+      for (var i = 0; i < points.length; i++) {
+        dist = getDistance(points[i], center);
+        maxDist = dist > maxDist ? dist : maxDist;
+        path[i] = {
+          x: i,
+          y: getDistance(points[i], center)
+        };
+      }
+      for (var i = 0; i < points.length; i++) {
+        path[i].y = (path[i].y / maxDist) * height;
+      }
+      return path;
+    }
+
     function getContext(canvasID) {
       var canvas = document.getElementById(canvasID);
       return canvas.getContext('2d');
     }
 
-    function renderImageData(imageData, imgU8, context2D){
-      console.log("renderImageData context2D = ", context2D);
+    function renderImageData(imageData, imgU8, ctx) {
       // render result back to canvas
       var dataU32 = new Uint32Array(imageData.data.buffer);
       var alpha = (0xff << 24);
@@ -12969,11 +13121,16 @@ define('services/CanvasService',[], function() {
         dataU32[i] = alpha | (pix << 16) | (pix << 8) | pix;
       }
 
-      context2D.putImageData(imageData, 0, 0);
+      ctx.putImageData(imageData, 0, 0);
     }
 
     return {
+      canvasClear: canvasClear,
+      drawPath: drawPath,
+      getCenter: getCenter,
       getContext: getContext,
+      getPath: getPath,
+      drawPoint: drawPoint,
       renderImageData: renderImageData
     };
   };
@@ -12998,7 +13155,7 @@ define('services/ContoursService',[], function() {
     this.bColor; // background color
     this.threshold;
     //this.maxContourPoints = Infinity; //was 500*4
-    this.maxContourPoints = 500 * 10;
+    this.maxContourPoints = 500 * 500;
     this.allContours = [];
 
     this.offset4 = function(x, y) {
@@ -13032,6 +13189,7 @@ define('services/ContoursService',[], function() {
 
 
     this.findContours = function(image, foregroundColor, backgroundColor, threshold) {
+      this.allContours = [];
       var w = this.pixelsWidth = image.width;
       var h = this.pixelsHeight = image.height;
       this.fColor = foregroundColor;
@@ -13041,34 +13199,23 @@ define('services/ContoursService',[], function() {
       // create a new pixel array
       var imageCtx = image.getContext('2d');
       var imageData = imageCtx.getImageData(0, 0, w, h);
-      //console.log("imageData: ",imageData);
+      // console.log("imageData: ",imageData);
       var pixels = this.pixels = imageData.data;
-      //console.log("pixels: ",pixels);
+      // console.log("pixels: ",pixels);
       var prevValue = 0;
 
       for (var y = 0; y < h; y++) {
         for (var x = 0; x < w; x++) {
           var pix = this.getPixel(x, y);
           var factor = ((pix.r * .3 + pix.g * .59 + pix.b * .11))
-            //console.log(index+": "+r+" "+" "+g+" "+b+" "+a);
 
-          //var value = g;
           var value = (factor > threshold) ? 255 : 0; // threshold
 
-          //console.log(" > "+value);
 
           //this.setPixel(x, y, { r: value, g: value, b: value, a: pix.a });
           this.setPixel(x, y, [value, value, value, pix.a]);
-          //				pixels[index].r = value;
-          //				pixels[index].g = value;
-          //				pixels[index].b = value;
-          //				//pixels[index].a = value;
         }
       }
-
-      // copy the image data back onto the canvas
-      //imageCtx.putImageData(imageData, 0, 0); // at coords 0,0
-      //return;
 
       for (var y = 0; y < h; y++) {
         for (var x = 0; x < w; x++) {
@@ -13083,6 +13230,7 @@ define('services/ContoursService',[], function() {
               y: y
             });
             this.allContours.push(points);
+            return this.allContours;
           }
 
           //pix.r = 255;
@@ -13128,16 +13276,16 @@ define('services/ContoursService',[], function() {
 
       // copy the image data back onto the canvas
       imageCtx.putImageData(imageData, 0, 0); // at coords 0,0
+      return this.allContours;
     };
 
     this.followContour = function(startPoint) {
-      //		console.log("followContour @",startPoint);
-      points = []; // start new contour
+      //console.log("followContour @",startPoint);
+      var points = []; // start new contour
       points.push(startPoint);
       var w = this.pixelsWidth;
       var h = this.pixelsHeight;
 
-      //console.log("w :",w," h: ",h);
 
       var point = startPoint;
       var numPoints = 0;
@@ -13260,7 +13408,7 @@ define('services/ContoursService',[], function() {
     };
 
     this.closeContour = function(points) {
-			console.log("CLOSE");
+			//console.log("CLOSE");
       //console.log("pixels: ",this.pixels);
     };
 
@@ -14119,20 +14267,13 @@ define('services/JSFeatService',[], function() {
   
   var factory = function($log) {
     function getMatrix(columns, rows, dataType) {
-      console.log("getMatrix 1 columns, rows = ", columns, ', ', rows);
-      //columns = columns | 640;
-      //rows = rows | 480;
-      console.log("getMatrix 2 columns, rows = ", columns, ', ', rows);
       dataType = dataType | jsfeat.U8_t | jsfeat.C1_t;
       return new jsfeat.matrix_t(columns, rows, dataType);
     }
 
     function grayScale(imageData, width, height, imgU8, code) {
-      console.log("grayScale");
       code = code || jsfeat.COLOR_RGBA2GRAY;
       jsfeat.imgproc.grayscale(imageData.data, width, height, imgU8, code);
-      console.log("grayScale imageData = ", imageData);
-      console.log("grayScale imgU8 = ", imgU8);
       return {
         imageData: imageData,
         imgU8: imgU8
@@ -14140,18 +14281,16 @@ define('services/JSFeatService',[], function() {
     }
 
     function canny(imageData, width, height, imgU8, options) {
-      console.log("canny");
-      console.log("width, height = ", width, ", ", height);
       var r = options.blurRadius | 0;
       var kernelSize = (r + 1) << 1;
-      console.log("canny 1 imgU8 = ", imgU8);
+      var r2 = options.blurRadius2 | 0;
+      var kernelSize2 = (r2 + 1) << 1;
+
       jsfeat.imgproc.grayscale(imageData.data, width, height, imgU8);
-      console.log("canny 2 imgU8 = ", imgU8);
       jsfeat.imgproc.gaussian_blur(imgU8, imgU8, kernelSize, 0);
-      console.log("canny 3 imgU8 = ", imgU8);
-      jsfeat.imgproc.canny(imageData.data, imgU8, options.lowThreshold, options.highThreshold);
-      console.log("canny imageData = ", imageData);
-      console.log("canny 4 imgU8 = ", imgU8);
+      jsfeat.imgproc.canny(imgU8, imgU8, options.lowThreshold, options.highThreshold);
+      jsfeat.imgproc.gaussian_blur(imgU8, imgU8, kernelSize2, 0);
+
       return {
         imageData: imageData,
         imgU8: imgU8
