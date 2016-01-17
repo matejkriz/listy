@@ -4,15 +4,62 @@
     <button class="button icon-left ion-camera button-block button-positive" ng-click="takePicture()">
       Pořídit fotku
     </button>
+    <canvas id="pathCanvas" width="4000" height="400"></canvas>
+    <div class="list">
+      <div class="item range range-positive">
+        Blur:&nbsp;{{options.blurRadius}}
+        <i class="icon ion-contrast"></i>
+        <input type="range" ng-model="options.blurRadius" ng-change="reprocessCanny()" name="volume" min="0" max="20">
+        <i class="icon ion-waterdrop"></i>
+      </div>
+      <div class="item range range-positive">
+        Blur2:&nbsp;{{options.blurRadius2}}
+        <i class="icon ion-contrast"></i>
+        <input type="range" ng-model="options.blurRadius2" ng-change="reprocessCanny()" name="volume" min="0" max="30">
+        <i class="icon ion-waterdrop"></i>
+      </div>
+      <div class="item range range-positive">
+        Treshold:&nbsp;{{options.treshold}}
+        <input type="range" ng-model="options.treshold" ng-change="reprocessCanny()" name="volume" min="0" max="50">
+      </div>
+      <div class="list list-inset">
+        <label class="item item-input">
+          Path length:&nbsp;
+          <input type="number" placeholder="Path length" ng-model="options.pathLength" ng-change="reprocessCanny()">
+        </label>
+      </div>
+      <!-- <div class="item">
+        Contours.length: {{contours.length}}
+      </div>
+      <div class="list list-inset">
+        <label class="item item-input">
+          <input type="number" placeholder="From" ng-model="options.from" ng-change="drawContoursPaths()">
+        </label>
+        <label class="item item-input">
+          <input type="number" placeholder="To" ng-model="options.to" ng-change="drawContoursPaths()">
+        </label>
+      </div> -->
+    </div>
+    <ion-slide-box on-slide-changed="slideHasChanged($index)">
+      <ion-slide>
+        <canvas id="previewCanvas" width="480" height="480"></canvas>
+      </ion-slide>
+      <ion-slide>
+        <canvas id="cannyCanvas" width="480" height="480"></canvas>
+      </ion-slidļe>
+      <ion-slide>
+        <canvas id="contoursCanvas" width="480" height="480"></canvas>
+      </ion-slide>
+    </ion-slide-box>
+
+
+
+
+    <!-- <canvas id="bwCanvas" width="480" height="480"></canvas> -->
     <form>
-        <input type="file" ng-file-select>
-   </form>
-   <b>Náhled:</b><br />
-   <i ng-hide="imageSrc">No image choosed</i>
-
-   <canvas id="previewCanvas" width="480" height="480"></canvas>
-   <canvas id="cannyCanvas" width="480" height="480"></canvas>
-   <canvas id="bwCanvas" width="480" height="480"></canvas>
-
+      <input type="file" ng-file-select>
+    </form>
+    <b>Náhled:</b><br/>
+    <i ng-hide="imageSrc">No image choosed</i>
   </ion-content>
 </ion-view>

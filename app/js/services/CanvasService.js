@@ -6,26 +6,28 @@ define([], function() {
     }
 
     function drawPath(ctx, path, color, length, isFunction) {
-      ctx.beginPath();
-      var zero = ctx.canvas.height;
-      if (isFunction) {
-        ctx.moveTo(path[0].x, zero - path[0].y);
-      } else {
-        ctx.moveTo(path[0].x, path[0].y);
-      }
-      var step = length ? (path.length / length) : 1;
-      // console.log("path = ", path);
-      // console.log("length = ", length);
-      // console.log("step = ", step);
-      for (var i = 1; i < path.length; i++) {
+      if (path && path.length) {
+        ctx.beginPath();
+        var zero = ctx.canvas.height;
         if (isFunction) {
-          ctx.lineTo(path[i].x / step, zero - path[i].y);
+          ctx.moveTo(path[0].x, zero - path[0].y);
         } else {
-          ctx.lineTo(path[i].x / step, path[i].y);
+          ctx.moveTo(path[0].x, path[0].y);
         }
+        var step = length ? (path.length / length) : 1;
+        // console.log("path = ", path);
+        // console.log("length = ", length);
+        // console.log("step = ", step);
+        for (var i = 1; i < path.length; i++) {
+          if (isFunction) {
+            ctx.lineTo(path[i].x / step, zero - path[i].y);
+          } else {
+            ctx.lineTo(path[i].x / step, path[i].y);
+          }
+        }
+        ctx.strokeStyle = color || 'green';
+        ctx.stroke();
       }
-      ctx.strokeStyle = color || 'green';
-      ctx.stroke();
     }
 
     function drawPoint(ctx, point, color) {
@@ -36,6 +38,11 @@ define([], function() {
     }
 
     function getCenter(points) {
+      if (!points) {
+        points = {
+          lenght: 0
+        };
+      }
       var x = 0;
       var y = 0;
       for (var i = 0; i < points.length; i++) {
@@ -53,7 +60,11 @@ define([], function() {
     }
 
     function getPath(points, center, height) {
-      height = height || 400;
+      if (!points) {
+        points = {
+          lenght: 0
+        };
+      }
       var path = [];
       var maxDist = 0;
       var dist = 0;
