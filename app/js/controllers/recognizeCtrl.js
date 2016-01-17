@@ -4,9 +4,14 @@
     return ['$scope', 'Camera', 'Canvas', 'api', 'Feat', 'FileReader', 'Contours', 'CV', '$window', function($scope, Camera, Canvas, api, Feat, FileReader, Contours, CV, $window) {
       var vm = this;
 
-      vm.drawContoursPaths = drawContoursPaths;
-      vm.getFile = getFile;
       vm.padding = 15;
+      vm.windowWidth = $window.innerWidth;
+      var size = Math.floor(vm.windowWidth / 2 - vm.padding);
+      vm.canvas = {
+        width: size,
+        height: size
+      };
+
       vm.options = {
         blurRadius: 8,
         blurRadius2: 2,
@@ -16,19 +21,16 @@
         pathHeight: Math.floor(vm.windowWidth / 1.618),
         treshold: 10
       };
-      vm.reprocessCanny = reprocessCanny;
-      vm.takePicture = takePicture;
-      vm.windowWidth = $window.innerWidth;
-      var size = Math.floor(wm.windowWidth / 2 - vm.padding);
-      vm.canvas = {
-        width: size,
-        height: size
-      };
 
       var cannyCtx;
       var previewCtx;
       var height;
       var width;
+
+      vm.drawContoursPaths = drawContoursPaths;
+      vm.getFile = getFile;
+      vm.reprocessCanny = reprocessCanny;
+      vm.takePicture = takePicture;
 
       // TODO: remove this for production
       drawImages('img/test.jpg', 'previewCanvas');
