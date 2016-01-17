@@ -4,44 +4,44 @@ define(['angular'], function(angular) {
   var factory = function() {
 
     // Some fake testing data
-    var chats = [{
+    var trees = [{
       id: 0,
       name: 'Dub letní',
-      lastText: 'Quercus robur',
-      face: 'img/dub.jpg'
+      nameLatin: 'Quercus robur',
+      image: 'img/dub.jpg'
     }, {
       id: 1,
       name: 'Javor klen',
-      lastText: 'Acer pseudoplatanus',
-      face: 'img/javor.jpg'
+      nameLatin: 'Acer pseudoplatanus',
+      image: 'img/javor.jpg'
     }, {
       id: 2,
       name: 'Olše lepkavá',
-      lastText: 'Alnus glutinosa',
-      face: 'img/olse.jpg'
+      nameLatin: 'Alnus glutinosa',
+      image: 'img/olse.jpg'
     }, {
       id: 3,
       name: 'Jabloň domácí',
-      lastText: 'Malus domestica',
-      face: 'img/jablon.jpg'
+      nameLatin: 'Malus domestica',
+      image: 'img/jablon.jpg'
     }, {
       id: 4,
       name: 'Buk lesní',
-      lastText: 'Fagus sylvatica',
-      face: 'img/buk.jpg'
+      nameLatin: 'Fagus sylvatica',
+      image: 'img/buk.jpg'
     }];
 
     return {
       all: function() {
-        return chats;
+        return trees;
       },
-      remove: function(chat) {
-        chats.splice(chats.indexOf(chat), 1);
+      remove: function(tree) {
+        trees.splice(trees.indexOf(tree), 1);
       },
-      get: function(chatId) {
-        for (var i = 0; i < chats.length; i++) {
-          if (chats[i].id === parseInt(chatId)) {
-            return chats[i];
+      get: function(treeId) {
+        for (var i = 0; i < trees.length; i++) {
+          if (trees[i].id === parseInt(treeId)) {
+            return trees[i];
           }
         }
         return null;
