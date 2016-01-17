@@ -3,36 +3,10 @@
   define([], function() {
     return ['$scope', 'Camera', 'Canvas', 'api', 'Feat', 'FileReader', 'Contours', 'CV', '$window', function($scope, Camera, Canvas, api, Feat, FileReader, Contours, CV, $window) {
       var vm = this;
-      //Contours.closeContour();
-      //CV.findContours();
-      vm.padding = 15;
-      vm.reprocessCanny = reprocessCanny;
+
       vm.drawContoursPaths = drawContoursPaths;
-      vm.windowWidth = $window.innerWidth;
-      setCanvasSize(vm.windowWidth);
-
-      function setCanvasSize(windowWidth) {
-        var size = Math.floor(windowWidth / 2 - vm.padding);
-        vm.canvas = {
-          width: size,
-          height: size
-        };
-      }
-
-
-      // listen window width changes
-      //
-      // var w = angular.element($window);
-      // vm.$watch(function() {
-      //   return $window.innerWidth;
-      // }, function(value) {
-      //   vm.windowWidth = value;
-      //   setCanvasSize(value);
-      // });
-      // w.bind('resize', function() {
-      //   vm.$apply();
-      // })
-
+      vm.getFile = getFile;
+      vm.padding = 15;
       vm.options = {
         blurRadius: 8,
         blurRadius2: 2,
@@ -42,8 +16,24 @@
         pathHeight: Math.floor(vm.windowWidth / 1.618),
         treshold: 10
       };
+      vm.reprocessCanny = reprocessCanny;
+      vm.takePicture = takePicture;
+      vm.windowWidth = $window.innerWidth;
+      var size = Math.floor(wm.windowWidth / 2 - vm.padding);
+      vm.canvas = {
+        width: size,
+        height: size
+      };
 
-      vm.getFile = function(file) {
+      var cannyCtx;
+      var previewCtx;
+      var height;
+      var width;
+
+      // TODO: remove this for production
+      drawImages('img/test.jpg', 'previewCanvas');
+
+      function getFile(file) {
         FileReader.readAsDataUrl(file, vm)
           .then(function(result) {
             vm.imageSrc = result;
@@ -52,7 +42,7 @@
           });
       };
 
-      vm.takePicture = function() {
+      function takePicture() {
         // console.log('takePicture!');
         Camera.takePicture().then(function(neco) {
           setTimeout(function() {
@@ -60,12 +50,6 @@
           }, 0);
         });
       };
-
-      var previewCtx;
-      var cannyCtx;
-      var width;
-      var height;
-      drawImages('img/test.jpg', 'previewCanvas');
 
       function drawImages(image, canvasID) {
         previewCtx = Canvas.getContext(canvasID);
