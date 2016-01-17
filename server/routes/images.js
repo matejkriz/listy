@@ -71,7 +71,7 @@ exports.testOpenCV = function(req, res) {
       }
     }
 
-    all.drawAllContours(contours, WHITE);
+    //all.drawAllContours(contours, WHITE);
 
     big.save(imagesPath + 'big.png');
 

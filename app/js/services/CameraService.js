@@ -32,7 +32,10 @@ define(['angular'], function(angular) {
 
   var factory = function($log, $q, $window) {
     function showWarning(){
+      var deferred = $q.defer();
       $log.warn('Camera plugin is not available outside cordova app.');
+      deferred.reject();
+      return deferred.promise;
     }
 
     if (!$window.Camera) {
