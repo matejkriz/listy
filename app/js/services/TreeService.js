@@ -8,7 +8,7 @@ define(['angular'], function(angular) {
       id: 0,
       name: 'Dub letní',
       nameLatin: 'Quercus robur',
-      image: 'img/dub.jpg'
+      image: 'dub.jpg'
     }, {
       id: 1,
       name: 'Javor klen',

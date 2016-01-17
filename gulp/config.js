@@ -61,7 +61,7 @@ module.exports = {
             imagePath: 'images' // Used by the image-url helper
         }
     },
-    server: {
+    connect: {
         root: src,
         livereload: true,
         defaultPort: 3042

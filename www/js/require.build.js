@@ -330,214 +330,247 @@ define("ionic", ["angular"], (function (global) {
 "undefined"!=typeof module&&"undefined"!=typeof exports&&module.exports===exports&&(module.exports="ui.router"),function(a,b,c){function d(a,b){return M(new(M(function(){},{prototype:a})),b)}function e(a){return L(arguments,function(b){b!==a&&L(b,function(b,c){a.hasOwnProperty(c)||(a[c]=b)})}),a}function f(a,b){var c=[];for(var d in a.path){if(a.path[d]!==b.path[d])break;c.push(a.path[d])}return c}function g(a){if(Object.keys)return Object.keys(a);var c=[];return b.forEach(a,function(a,b){c.push(b)}),c}function h(a,b){if(Array.prototype.indexOf)return a.indexOf(b,Number(arguments[2])||0);var c=a.length>>>0,d=Number(arguments[2])||0;for(d=0>d?Math.ceil(d):Math.floor(d),0>d&&(d+=c);c>d;d++)if(d in a&&a[d]===b)return d;return-1}function i(a,b,c,d){var e,i=f(c,d),j={},k=[];for(var l in i)if(i[l].params&&(e=g(i[l].params),e.length))for(var m in e)h(k,e[m])>=0||(k.push(e[m]),j[e[m]]=a[e[m]]);return M({},j,b)}function j(a,b,c){if(!c){c=[];for(var d in a)c.push(d)}for(var e=0;e<c.length;e++){var f=c[e];if(a[f]!=b[f])return!1}return!0}function k(a,b){var c={};return L(a,function(a){c[a]=b[a]}),c}function l(a){var b={},c=Array.prototype.concat.apply(Array.prototype,Array.prototype.slice.call(arguments,1));for(var d in a)-1==h(c,d)&&(b[d]=a[d]);return b}function m(a,b){var c=K(a),d=c?[]:{};return L(a,function(a,e){b(a,e)&&(d[c?d.length:e]=a)}),d}function n(a,b){var c=K(a)?[]:{};return L(a,function(a,d){c[d]=b(a,d)}),c}function o(a,b){var d=1,f=2,i={},j=[],k=i,m=M(a.when(i),{$$promises:i,$$values:i});this.study=function(i){function n(a,c){if(s[c]!==f){if(r.push(c),s[c]===d)throw r.splice(0,h(r,c)),new Error("Cyclic dependency: "+r.join(" -> "));if(s[c]=d,I(a))q.push(c,[function(){return b.get(a)}],j);else{var e=b.annotate(a);L(e,function(a){a!==c&&i.hasOwnProperty(a)&&n(i[a],a)}),q.push(c,a,e)}r.pop(),s[c]=f}}function o(a){return J(a)&&a.then&&a.$$promises}if(!J(i))throw new Error("'invocables' must be an object");var p=g(i||{}),q=[],r=[],s={};return L(i,n),i=r=s=null,function(d,f,g){function h(){--u||(v||e(t,f.$$values),r.$$values=t,r.$$promises=r.$$promises||!0,delete r.$$inheritedValues,n.resolve(t))}function i(a){r.$$failure=a,n.reject(a)}function j(c,e,f){function j(a){l.reject(a),i(a)}function k(){if(!G(r.$$failure))try{l.resolve(b.invoke(e,g,t)),l.promise.then(function(a){t[c]=a,h()},j)}catch(a){j(a)}}var l=a.defer(),m=0;L(f,function(a){s.hasOwnProperty(a)&&!d.hasOwnProperty(a)&&(m++,s[a].then(function(b){t[a]=b,--m||k()},j))}),m||k(),s[c]=l.promise}if(o(d)&&g===c&&(g=f,f=d,d=null),d){if(!J(d))throw new Error("'locals' must be an object")}else d=k;if(f){if(!o(f))throw new Error("'parent' must be a promise returned by $resolve.resolve()")}else f=m;var n=a.defer(),r=n.promise,s=r.$$promises={},t=M({},d),u=1+q.length/3,v=!1;if(G(f.$$failure))return i(f.$$failure),r;f.$$inheritedValues&&e(t,l(f.$$inheritedValues,p)),M(s,f.$$promises),f.$$values?(v=e(t,l(f.$$values,p)),r.$$inheritedValues=l(f.$$values,p),h()):(f.$$inheritedValues&&(r.$$inheritedValues=l(f.$$inheritedValues,p)),f.then(h,i));for(var w=0,x=q.length;x>w;w+=3)d.hasOwnProperty(q[w])?h():j(q[w],q[w+1],q[w+2]);return r}},this.resolve=function(a,b,c,d){return this.study(a)(b,c,d)}}function p(a,b,c){this.fromConfig=function(a,b,c){return G(a.template)?this.fromString(a.template,b):G(a.templateUrl)?this.fromUrl(a.templateUrl,b):G(a.templateProvider)?this.fromProvider(a.templateProvider,b,c):null},this.fromString=function(a,b){return H(a)?a(b):a},this.fromUrl=function(c,d){return H(c)&&(c=c(d)),null==c?null:a.get(c,{cache:b,headers:{Accept:"text/html"}}).then(function(a){return a.data})},this.fromProvider=function(a,b,d){return c.invoke(a,null,d||{params:b})}}function q(a,b,e){function f(b,c,d,e){if(q.push(b),o[b])return o[b];if(!/^\w+(-+\w+)*(?:\[\])?$/.test(b))throw new Error("Invalid parameter name '"+b+"' in pattern '"+a+"'");if(p[b])throw new Error("Duplicate parameter name '"+b+"' in pattern '"+a+"'");return p[b]=new O.Param(b,c,d,e),p[b]}function g(a,b,c){var d=["",""],e=a.replace(/[\\\[\]\^$*+?.()|{}]/g,"\\$&");if(!b)return e;switch(c){case!1:d=["(",")"];break;case!0:d=["?(",")?"];break;default:d=["("+c+"|",")?"]}return e+d[0]+b+d[1]}function h(c,e){var f,g,h,i,j;return f=c[2]||c[3],j=b.params[f],h=a.substring(m,c.index),g=e?c[4]:c[4]||("*"==c[1]?".*":null),i=O.type(g||"string")||d(O.type("string"),{pattern:new RegExp(g)}),{id:f,regexp:g,segment:h,type:i,cfg:j}}b=M({params:{}},J(b)?b:{});var i,j=/([:*])([\w\[\]]+)|\{([\w\[\]]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,k=/([:]?)([\w\[\]-]+)|\{([\w\[\]-]+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g,l="^",m=0,n=this.segments=[],o=e?e.params:{},p=this.params=e?e.params.$$new():new O.ParamSet,q=[];this.source=a;for(var r,s,t;(i=j.exec(a))&&(r=h(i,!1),!(r.segment.indexOf("?")>=0));)s=f(r.id,r.type,r.cfg,"path"),l+=g(r.segment,s.type.pattern.source,s.squash),n.push(r.segment),m=j.lastIndex;t=a.substring(m);var u=t.indexOf("?");if(u>=0){var v=this.sourceSearch=t.substring(u);if(t=t.substring(0,u),this.sourcePath=a.substring(0,m+u),v.length>0)for(m=0;i=k.exec(v);)r=h(i,!0),s=f(r.id,r.type,r.cfg,"search"),m=j.lastIndex}else this.sourcePath=a,this.sourceSearch="";l+=g(t)+(b.strict===!1?"/?":"")+"$",n.push(t),this.regexp=new RegExp(l,b.caseInsensitive?"i":c),this.prefix=n[0],this.$$paramNames=q}function r(a){M(this,a)}function s(){function a(a){return null!=a?a.toString().replace(/\//g,"%2F"):a}function e(a){return null!=a?a.toString().replace(/%2F/g,"/"):a}function f(a){return this.pattern.test(a)}function i(){return{strict:t,caseInsensitive:p}}function j(a){return H(a)||K(a)&&H(a[a.length-1])}function k(){for(;x.length;){var a=x.shift();if(a.pattern)throw new Error("You cannot override a type's .pattern at runtime.");b.extend(v[a.name],o.invoke(a.def))}}function l(a){M(this,a||{})}O=this;var o,p=!1,t=!0,u=!1,v={},w=!0,x=[],y={string:{encode:a,decode:e,is:f,pattern:/[^/]*/},"int":{encode:a,decode:function(a){return parseInt(a,10)},is:function(a){return G(a)&&this.decode(a.toString())===a},pattern:/\d+/},bool:{encode:function(a){return a?1:0},decode:function(a){return 0!==parseInt(a,10)},is:function(a){return a===!0||a===!1},pattern:/0|1/},date:{encode:function(a){return this.is(a)?[a.getFullYear(),("0"+(a.getMonth()+1)).slice(-2),("0"+a.getDate()).slice(-2)].join("-"):c},decode:function(a){if(this.is(a))return a;var b=this.capture.exec(a);return b?new Date(b[1],b[2]-1,b[3]):c},is:function(a){return a instanceof Date&&!isNaN(a.valueOf())},equals:function(a,b){return this.is(a)&&this.is(b)&&a.toISOString()===b.toISOString()},pattern:/[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])/,capture:/([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/},json:{encode:b.toJson,decode:b.fromJson,is:b.isObject,equals:b.equals,pattern:/[^/]*/},any:{encode:b.identity,decode:b.identity,is:b.identity,equals:b.equals,pattern:/.*/}};s.$$getDefaultValue=function(a){if(!j(a.value))return a.value;if(!o)throw new Error("Injectable functions cannot be called at configuration time");return o.invoke(a.value)},this.caseInsensitive=function(a){return G(a)&&(p=a),p},this.strictMode=function(a){return G(a)&&(t=a),t},this.defaultSquashPolicy=function(a){if(!G(a))return u;if(a!==!0&&a!==!1&&!I(a))throw new Error("Invalid squash policy: "+a+". Valid policies: false, true, arbitrary-string");return u=a,a},this.compile=function(a,b){return new q(a,M(i(),b))},this.isMatcher=function(a){if(!J(a))return!1;var b=!0;return L(q.prototype,function(c,d){H(c)&&(b=b&&G(a[d])&&H(a[d]))}),b},this.type=function(a,b,c){if(!G(b))return v[a];if(v.hasOwnProperty(a))throw new Error("A type named '"+a+"' has already been defined.");return v[a]=new r(M({name:a},b)),c&&(x.push({name:a,def:c}),w||k()),this},L(y,function(a,b){v[b]=new r(M({name:b},a))}),v=d(v,{}),this.$get=["$injector",function(a){return o=a,w=!1,k(),L(y,function(a,b){v[b]||(v[b]=new r(a))}),this}],this.Param=function(a,b,d,e){function f(a){var b=J(a)?g(a):[],c=-1===h(b,"value")&&-1===h(b,"type")&&-1===h(b,"squash")&&-1===h(b,"array");return c&&(a={value:a}),a.$$fn=j(a.value)?a.value:function(){return a.value},a}function i(b,c,d){if(b.type&&c)throw new Error("Param '"+a+"' has two type configurations.");return c?c:b.type?b.type instanceof r?b.type:new r(b.type):"config"===d?v.any:v.string}function k(){var b={array:"search"===e?"auto":!1},c=a.match(/\[\]$/)?{array:!0}:{};return M(b,c,d).array}function l(a,b){var c=a.squash;if(!b||c===!1)return!1;if(!G(c)||null==c)return u;if(c===!0||I(c))return c;throw new Error("Invalid squash policy: '"+c+"'. Valid policies: false, true, or arbitrary string")}function p(a,b,d,e){var f,g,i=[{from:"",to:d||b?c:""},{from:null,to:d||b?c:""}];return f=K(a.replace)?a.replace:[],I(e)&&f.push({from:e,to:c}),g=n(f,function(a){return a.from}),m(i,function(a){return-1===h(g,a.from)}).concat(f)}function q(){if(!o)throw new Error("Injectable functions cannot be called at configuration time");return o.invoke(d.$$fn)}function s(a){function b(a){return function(b){return b.from===a}}function c(a){var c=n(m(w.replace,b(a)),function(a){return a.to});return c.length?c[0]:a}return a=c(a),G(a)?w.type.decode(a):q()}function t(){return"{Param:"+a+" "+b+" squash: '"+z+"' optional: "+y+"}"}var w=this;d=f(d),b=i(d,b,e);var x=k();b=x?b.$asArray(x,"search"===e):b,"string"!==b.name||x||"path"!==e||d.value!==c||(d.value="");var y=d.value!==c,z=l(d,y),A=p(d,x,y,z);M(this,{id:a,type:b,location:e,array:x,squash:z,replace:A,isOptional:y,value:s,dynamic:c,config:d,toString:t})},l.prototype={$$new:function(){return d(this,M(new l,{$$parent:this}))},$$keys:function(){for(var a=[],b=[],c=this,d=g(l.prototype);c;)b.push(c),c=c.$$parent;return b.reverse(),L(b,function(b){L(g(b),function(b){-1===h(a,b)&&-1===h(d,b)&&a.push(b)})}),a},$$values:function(a){var b={},c=this;return L(c.$$keys(),function(d){b[d]=c[d].value(a&&a[d])}),b},$$equals:function(a,b){var c=!0,d=this;return L(d.$$keys(),function(e){var f=a&&a[e],g=b&&b[e];d[e].type.equals(f,g)||(c=!1)}),c},$$validates:function(a){var b,c,d,e=!0,f=this;return L(this.$$keys(),function(g){d=f[g],c=a[g],b=!c&&d.isOptional,e=e&&(b||!!d.type.is(c))}),e},$$parent:c},this.ParamSet=l}function t(a,d){function e(a){var b=/^\^((?:\\[^a-zA-Z0-9]|[^\\\[\]\^$*+?.()|{}]+)*)/.exec(a.source);return null!=b?b[1].replace(/\\(.)/g,"$1"):""}function f(a,b){return a.replace(/\$(\$|\d{1,2})/,function(a,c){return b["$"===c?0:Number(c)]})}function g(a,b,c){if(!c)return!1;var d=a.invoke(b,b,{$match:c});return G(d)?d:!0}function h(d,e,f,g){function h(a,b,c){return"/"===p?a:b?p.slice(0,-1)+a:c?p.slice(1)+a:a}function m(a){function b(a){var b=a(f,d);return b?(I(b)&&d.replace().url(b),!0):!1}if(!a||!a.defaultPrevented){var e=o&&d.url()===o;if(o=c,e)return!0;var g,h=j.length;for(g=0;h>g;g++)if(b(j[g]))return;k&&b(k)}}function n(){return i=i||e.$on("$locationChangeSuccess",m)}var o,p=g.baseHref(),q=d.url();return l||n(),{sync:function(){m()},listen:function(){return n()},update:function(a){return a?void(q=d.url()):void(d.url()!==q&&(d.url(q),d.replace()))},push:function(a,b,e){d.url(a.format(b||{})),o=e&&e.$$avoidResync?d.url():c,e&&e.replace&&d.replace()},href:function(c,e,f){if(!c.validates(e))return null;var g=a.html5Mode();b.isObject(g)&&(g=g.enabled);var i=c.format(e);if(f=f||{},g||null===i||(i="#"+a.hashPrefix()+i),i=h(i,g,f.absolute),!f.absolute||!i)return i;var j=!g&&i?"/":"",k=d.port();return k=80===k||443===k?"":":"+k,[d.protocol(),"://",d.host(),k,j,i].join("")}}}var i,j=[],k=null,l=!1;this.rule=function(a){if(!H(a))throw new Error("'rule' must be a function");return j.push(a),this},this.otherwise=function(a){if(I(a)){var b=a;a=function(){return b}}else if(!H(a))throw new Error("'rule' must be a function");return k=a,this},this.when=function(a,b){var c,h=I(b);if(I(a)&&(a=d.compile(a)),!h&&!H(b)&&!K(b))throw new Error("invalid 'handler' in when()");var i={matcher:function(a,b){return h&&(c=d.compile(b),b=["$match",function(a){return c.format(a)}]),M(function(c,d){return g(c,b,a.exec(d.path(),d.search()))},{prefix:I(a.prefix)?a.prefix:""})},regex:function(a,b){if(a.global||a.sticky)throw new Error("when() RegExp must not be global or sticky");return h&&(c=b,b=["$match",function(a){return f(c,a)}]),M(function(c,d){return g(c,b,a.exec(d.path()))},{prefix:e(a)})}},j={matcher:d.isMatcher(a),regex:a instanceof RegExp};for(var k in j)if(j[k])return this.rule(i[k](a,b));throw new Error("invalid 'what' in when()")},this.deferIntercept=function(a){a===c&&(a=!0),l=a},this.$get=h,h.$inject=["$location","$rootScope","$injector","$browser"]}function u(a,e){function f(a){return 0===a.indexOf(".")||0===a.indexOf("^")}function l(a,b){if(!a)return c;var d=I(a),e=d?a:a.name,g=f(e);if(g){if(!b)throw new Error("No reference point given for path '"+e+"'");b=l(b);for(var h=e.split("."),i=0,j=h.length,k=b;j>i;i++)if(""!==h[i]||0!==i){if("^"!==h[i])break;if(!k.parent)throw new Error("Path '"+e+"' not valid for state '"+b.name+"'");k=k.parent}else k=b;h=h.slice(i).join("."),e=k.name+(k.name&&h?".":"")+h}var m=y[e];return!m||!d&&(d||m!==a&&m.self!==a)?c:m}function m(a,b){z[a]||(z[a]=[]),z[a].push(b)}function o(a){for(var b=z[a]||[];b.length;)p(b.shift())}function p(b){b=d(b,{self:b,resolve:b.resolve||{},toString:function(){return this.name}});var c=b.name;if(!I(c)||c.indexOf("@")>=0)throw new Error("State must have a valid name");if(y.hasOwnProperty(c))throw new Error("State '"+c+"'' is already defined");var e=-1!==c.indexOf(".")?c.substring(0,c.lastIndexOf(".")):I(b.parent)?b.parent:J(b.parent)&&I(b.parent.name)?b.parent.name:"";if(e&&!y[e])return m(e,b.self);for(var f in B)H(B[f])&&(b[f]=B[f](b,B.$delegates[f]));return y[c]=b,!b[A]&&b.url&&a.when(b.url,["$match","$stateParams",function(a,c){x.$current.navigable==b&&j(a,c)||x.transitionTo(b,a,{inherit:!0,location:!1})}]),o(c),b}function q(a){return a.indexOf("*")>-1}function r(a){var b=a.split("."),c=x.$current.name.split(".");if("**"===b[0]&&(c=c.slice(h(c,b[1])),c.unshift("**")),"**"===b[b.length-1]&&(c.splice(h(c,b[b.length-2])+1,Number.MAX_VALUE),c.push("**")),b.length!=c.length)return!1;for(var d=0,e=b.length;e>d;d++)"*"===b[d]&&(c[d]="*");return c.join("")===b.join("")}function s(a,b){return I(a)&&!G(b)?B[a]:H(b)&&I(a)?(B[a]&&!B.$delegates[a]&&(B.$delegates[a]=B[a]),B[a]=b,this):this}function t(a,b){return J(a)?b=a:b.name=a,p(b),this}function u(a,e,f,h,m,o,p){function s(b,c,d,f){var g=a.$broadcast("$stateNotFound",b,c,d);if(g.defaultPrevented)return p.update(),B;if(!g.retry)return null;if(f.$retry)return p.update(),C;var h=x.transition=e.when(g.retry);return h.then(function(){return h!==x.transition?u:(b.options.$retry=!0,x.transitionTo(b.to,b.toParams,b.options))},function(){return B}),p.update(),h}function t(a,c,d,g,i,j){var l=d?c:k(a.params.$$keys(),c),n={$stateParams:l};i.resolve=m.resolve(a.resolve,n,i.resolve,a);var o=[i.resolve.then(function(a){i.globals=a})];return g&&o.push(g),L(a.views,function(c,d){var e=c.resolve&&c.resolve!==a.resolve?c.resolve:{};e.$template=[function(){return f.load(d,{view:c,locals:n,params:l,notify:j.notify})||""}],o.push(m.resolve(e,n,i.resolve,a).then(function(f){if(H(c.controllerProvider)||K(c.controllerProvider)){var g=b.extend({},e,n);f.$$controller=h.invoke(c.controllerProvider,null,g)}else f.$$controller=c.controller;f.$$state=a,f.$$controllerAs=c.controllerAs,i[d]=f}))}),e.all(o).then(function(){return i})}var u=e.reject(new Error("transition superseded")),z=e.reject(new Error("transition prevented")),B=e.reject(new Error("transition aborted")),C=e.reject(new Error("transition failed"));return w.locals={resolve:null,globals:{$stateParams:{}}},x={params:{},current:w.self,$current:w,transition:null},x.reload=function(){return x.transitionTo(x.current,o,{reload:!0,inherit:!1,notify:!0})},x.go=function(a,b,c){return x.transitionTo(a,b,M({inherit:!0,relative:x.$current},c))},x.transitionTo=function(b,c,f){c=c||{},f=M({location:!0,inherit:!1,relative:null,notify:!0,reload:!1,$retry:!1},f||{});var g,j=x.$current,m=x.params,n=j.path,q=l(b,f.relative);if(!G(q)){var r={to:b,toParams:c,options:f},y=s(r,j.self,m,f);if(y)return y;if(b=r.to,c=r.toParams,f=r.options,q=l(b,f.relative),!G(q)){if(!f.relative)throw new Error("No such state '"+b+"'");throw new Error("Could not resolve '"+b+"' from state '"+f.relative+"'")}}if(q[A])throw new Error("Cannot transition to abstract state '"+b+"'");if(f.inherit&&(c=i(o,c||{},x.$current,q)),!q.params.$$validates(c))return C;c=q.params.$$values(c),b=q;var B=b.path,D=0,E=B[D],F=w.locals,H=[];if(!f.reload)for(;E&&E===n[D]&&E.ownParams.$$equals(c,m);)F=H[D]=E.locals,D++,E=B[D];if(v(b,j,F,f))return b.self.reloadOnSearch!==!1&&p.update(),x.transition=null,e.when(x.current);if(c=k(b.params.$$keys(),c||{}),f.notify&&a.$broadcast("$stateChangeStart",b.self,c,j.self,m).defaultPrevented)return p.update(),z;for(var I=e.when(F),J=D;J<B.length;J++,E=B[J])F=H[J]=d(F),I=t(E,c,E===b,I,F,f);var K=x.transition=I.then(function(){var d,e,g;if(x.transition!==K)return u;for(d=n.length-1;d>=D;d--)g=n[d],g.self.onExit&&h.invoke(g.self.onExit,g.self,g.locals.globals),g.locals=null;for(d=D;d<B.length;d++)e=B[d],e.locals=H[d],e.self.onEnter&&h.invoke(e.self.onEnter,e.self,e.locals.globals);return x.transition!==K?u:(x.$current=b,x.current=b.self,x.params=c,N(x.params,o),x.transition=null,f.location&&b.navigable&&p.push(b.navigable.url,b.navigable.locals.globals.$stateParams,{$$avoidResync:!0,replace:"replace"===f.location}),f.notify&&a.$broadcast("$stateChangeSuccess",b.self,c,j.self,m),p.update(!0),x.current)},function(d){return x.transition!==K?u:(x.transition=null,g=a.$broadcast("$stateChangeError",b.self,c,j.self,m,d),g.defaultPrevented||p.update(),e.reject(d))});return K},x.is=function(a,b,d){d=M({relative:x.$current},d||{});var e=l(a,d.relative);return G(e)?x.$current!==e?!1:b?j(e.params.$$values(b),o):!0:c},x.includes=function(a,b,d){if(d=M({relative:x.$current},d||{}),I(a)&&q(a)){if(!r(a))return!1;a=x.$current.name}var e=l(a,d.relative);return G(e)?G(x.$current.includes[e.name])?b?j(e.params.$$values(b),o,g(b)):!0:!1:c},x.href=function(a,b,d){d=M({lossy:!0,inherit:!0,absolute:!1,relative:x.$current},d||{});var e=l(a,d.relative);if(!G(e))return null;d.inherit&&(b=i(o,b||{},x.$current,e));var f=e&&d.lossy?e.navigable:e;return f&&f.url!==c&&null!==f.url?p.href(f.url,k(e.params.$$keys(),b||{}),{absolute:d.absolute}):null},x.get=function(a,b){if(0===arguments.length)return n(g(y),function(a){return y[a].self});var c=l(a,b||x.$current);return c&&c.self?c.self:null},x}function v(a,b,c,d){return a!==b||(c!==b.locals||d.reload)&&a.self.reloadOnSearch!==!1?void 0:!0}var w,x,y={},z={},A="abstract",B={parent:function(a){if(G(a.parent)&&a.parent)return l(a.parent);var b=/^(.+)\.[^.]+$/.exec(a.name);return b?l(b[1]):w},data:function(a){return a.parent&&a.parent.data&&(a.data=a.self.data=M({},a.parent.data,a.data)),a.data},url:function(a){var b=a.url,c={params:a.params||{}};if(I(b))return"^"==b.charAt(0)?e.compile(b.substring(1),c):(a.parent.navigable||w).url.concat(b,c);if(!b||e.isMatcher(b))return b;throw new Error("Invalid url '"+b+"' in state '"+a+"'")},navigable:function(a){return a.url?a:a.parent?a.parent.navigable:null},ownParams:function(a){var b=a.url&&a.url.params||new O.ParamSet;return L(a.params||{},function(a,c){b[c]||(b[c]=new O.Param(c,null,a,"config"))}),b},params:function(a){return a.parent&&a.parent.params?M(a.parent.params.$$new(),a.ownParams):new O.ParamSet},views:function(a){var b={};return L(G(a.views)?a.views:{"":a},function(c,d){d.indexOf("@")<0&&(d+="@"+a.parent.name),b[d]=c}),b},path:function(a){return a.parent?a.parent.path.concat(a):[]},includes:function(a){var b=a.parent?M({},a.parent.includes):{};return b[a.name]=!0,b},$delegates:{}};w=p({name:"",url:"^",views:null,"abstract":!0}),w.navigable=null,this.decorator=s,this.state=t,this.$get=u,u.$inject=["$rootScope","$q","$view","$injector","$resolve","$stateParams","$urlRouter","$location","$urlMatcherFactory"]}function v(){function a(a,b){return{load:function(c,d){var e,f={template:null,controller:null,view:null,locals:null,notify:!0,async:!0,params:{}};return d=M(f,d),d.view&&(e=b.fromConfig(d.view,d.params,d.locals)),e&&d.notify&&a.$broadcast("$viewContentLoading",d),e}}}this.$get=a,a.$inject=["$rootScope","$templateFactory"]}function w(){var a=!1;this.useAnchorScroll=function(){a=!0},this.$get=["$anchorScroll","$timeout",function(b,c){return a?b:function(a){c(function(){a[0].scrollIntoView()},0,!1)}}]}function x(a,c,d,e){function f(){return c.has?function(a){return c.has(a)?c.get(a):null}:function(a){try{return c.get(a)}catch(b){return null}}}function g(a,b){var c=function(){return{enter:function(a,b,c){b.after(a),c()},leave:function(a,b){a.remove(),b()}}};if(j)return{enter:function(a,b,c){var d=j.enter(a,null,b,c);d&&d.then&&d.then(c)},leave:function(a,b){var c=j.leave(a,b);c&&c.then&&c.then(b)}};if(i){var d=i&&i(b,a);return{enter:function(a,b,c){d.enter(a,null,b),c()},leave:function(a,b){d.leave(a),b()}}}return c()}var h=f(),i=h("$animator"),j=h("$animate"),k={restrict:"ECA",terminal:!0,priority:400,transclude:"element",compile:function(c,f,h){return function(c,f,i){function j(){l&&(l.remove(),l=null),n&&(n.$destroy(),n=null),m&&(r.leave(m,function(){l=null}),l=m,m=null)}function k(g){var k,l=z(c,i,f,e),s=l&&a.$current&&a.$current.locals[l];if(g||s!==o){k=c.$new(),o=a.$current.locals[l];var t=h(k,function(a){r.enter(a,f,function(){n&&n.$emit("$viewContentAnimationEnded"),(b.isDefined(q)&&!q||c.$eval(q))&&d(a)}),j()});m=t,n=k,n.$emit("$viewContentLoaded"),n.$eval(p)}}var l,m,n,o,p=i.onload||"",q=i.autoscroll,r=g(i,c);c.$on("$stateChangeSuccess",function(){k(!1)}),c.$on("$viewContentLoading",function(){k(!1)}),k(!0)}}};return k}function y(a,b,c,d){return{restrict:"ECA",priority:-400,compile:function(e){var f=e.html();return function(e,g,h){var i=c.$current,j=z(e,h,g,d),k=i&&i.locals[j];if(k){g.data("$uiView",{name:j,state:k.$$state}),g.html(k.$template?k.$template:f);var l=a(g.contents());if(k.$$controller){k.$scope=e;var m=b(k.$$controller,k);k.$$controllerAs&&(e[k.$$controllerAs]=m),g.data("$ngControllerController",m),g.children().data("$ngControllerController",m)}l(e)}}}}}function z(a,b,c,d){var e=d(b.uiView||b.name||"")(a),f=c.inheritedData("$uiView");return e.indexOf("@")>=0?e:e+"@"+(f?f.state.name:"")}function A(a,b){var c,d=a.match(/^\s*({[^}]*})\s*$/);if(d&&(a=b+"("+d[1]+")"),c=a.replace(/\n/g," ").match(/^([^(]+?)\s*(\((.*)\))?$/),!c||4!==c.length)throw new Error("Invalid state ref '"+a+"'");return{state:c[1],paramExpr:c[3]||null}}function B(a){var b=a.parent().inheritedData("$uiView");return b&&b.state&&b.state.name?b.state:void 0}function C(a,c){var d=["location","inherit","reload"];return{restrict:"A",require:["?^uiSrefActive","?^uiSrefActiveEq"],link:function(e,f,g,h){var i=A(g.uiSref,a.current.name),j=null,k=B(f)||a.$current,l=null,m="A"===f.prop("tagName"),n="FORM"===f[0].nodeName,o=n?"action":"href",p=!0,q={relative:k,inherit:!0},r=e.$eval(g.uiSrefOpts)||{};b.forEach(d,function(a){a in r&&(q[a]=r[a])});var s=function(c){if(c&&(j=b.copy(c)),p){l=a.href(i.state,j,q);var d=h[1]||h[0];return d&&d.$$setStateInfo(i.state,j),null===l?(p=!1,!1):void g.$set(o,l)}};i.paramExpr&&(e.$watch(i.paramExpr,function(a){a!==j&&s(a)},!0),j=b.copy(e.$eval(i.paramExpr))),s(),n||f.bind("click",function(b){var d=b.which||b.button;if(!(d>1||b.ctrlKey||b.metaKey||b.shiftKey||f.attr("target"))){var e=c(function(){a.go(i.state,j,q)});b.preventDefault();var g=m&&!l?1:0;b.preventDefault=function(){g--<=0&&c.cancel(e)}}})}}}function D(a,b,c){return{restrict:"A",controller:["$scope","$element","$attrs",function(b,d,e){function f(){g()?d.addClass(j):d.removeClass(j)}function g(){return"undefined"!=typeof e.uiSrefActiveEq?h&&a.is(h.name,i):h&&a.includes(h.name,i)}var h,i,j;j=c(e.uiSrefActiveEq||e.uiSrefActive||"",!1)(b),this.$$setStateInfo=function(b,c){h=a.get(b,B(d)),i=c,f()},b.$on("$stateChangeSuccess",f)}]}}function E(a){var b=function(b){return a.is(b)};return b.$stateful=!0,b}function F(a){var b=function(b){return a.includes(b)};return b.$stateful=!0,b}var G=b.isDefined,H=b.isFunction,I=b.isString,J=b.isObject,K=b.isArray,L=b.forEach,M=b.extend,N=b.copy;b.module("ui.router.util",["ng"]),b.module("ui.router.router",["ui.router.util"]),b.module("ui.router.state",["ui.router.router","ui.router.util"]),b.module("ui.router",["ui.router.state"]),b.module("ui.router.compat",["ui.router"]),o.$inject=["$q","$injector"],b.module("ui.router.util").service("$resolve",o),p.$inject=["$http","$templateCache","$injector"],b.module("ui.router.util").service("$templateFactory",p);var O;q.prototype.concat=function(a,b){var c={caseInsensitive:O.caseInsensitive(),strict:O.strictMode(),squash:O.defaultSquashPolicy()};return new q(this.sourcePath+a+this.sourceSearch,M(c,b),this)},q.prototype.toString=function(){return this.source},q.prototype.exec=function(a,b){function c(a){function b(a){return a.split("").reverse().join("")}function c(a){return a.replace(/\\-/,"-")}var d=b(a).split(/-(?!\\)/),e=n(d,b);return n(e,c).reverse()}var d=this.regexp.exec(a);if(!d)return null;b=b||{};var e,f,g,h=this.parameters(),i=h.length,j=this.segments.length-1,k={};if(j!==d.length-1)throw new Error("Unbalanced capture group in route '"+this.source+"'");for(e=0;j>e;e++){g=h[e];var l=this.params[g],m=d[e+1];for(f=0;f<l.replace;f++)l.replace[f].from===m&&(m=l.replace[f].to);m&&l.array===!0&&(m=c(m)),k[g]=l.value(m)}for(;i>e;e++)g=h[e],k[g]=this.params[g].value(b[g]);return k},q.prototype.parameters=function(a){return G(a)?this.params[a]||null:this.$$paramNames},q.prototype.validates=function(a){return this.params.$$validates(a)},q.prototype.format=function(a){function b(a){return encodeURIComponent(a).replace(/-/g,function(a){return"%5C%"+a.charCodeAt(0).toString(16).toUpperCase()})}a=a||{};var c=this.segments,d=this.parameters(),e=this.params;if(!this.validates(a))return null;var f,g=!1,h=c.length-1,i=d.length,j=c[0];for(f=0;i>f;f++){var k=h>f,l=d[f],m=e[l],o=m.value(a[l]),p=m.isOptional&&m.type.equals(m.value(),o),q=p?m.squash:!1,r=m.type.encode(o);if(k){var s=c[f+1];if(q===!1)null!=r&&(j+=K(r)?n(r,b).join("-"):encodeURIComponent(r)),j+=s;else if(q===!0){var t=j.match(/\/$/)?/\/?(.*)/:/(.*)/;j+=s.match(t)[1]}else I(q)&&(j+=q+s)}else{if(null==r||p&&q!==!1)continue;K(r)||(r=[r]),r=n(r,encodeURIComponent).join("&"+l+"="),j+=(g?"&":"?")+(l+"="+r),g=!0}}return j},r.prototype.is=function(){return!0},r.prototype.encode=function(a){return a},r.prototype.decode=function(a){return a},r.prototype.equals=function(a,b){return a==b},r.prototype.$subPattern=function(){var a=this.pattern.toString();return a.substr(1,a.length-2)},r.prototype.pattern=/.*/,r.prototype.toString=function(){return"{Type:"+this.name+"}"},r.prototype.$asArray=function(a,b){function d(a,b){function d(a,b){return function(){return a[b].apply(a,arguments)}}function e(a){return K(a)?a:G(a)?[a]:[]}function f(a){switch(a.length){case 0:return c;case 1:return"auto"===b?a[0]:a;default:return a}}function g(a){return!a}function h(a,b){return function(c){c=e(c);var d=n(c,a);return b===!0?0===m(d,g).length:f(d)}}function i(a){return function(b,c){var d=e(b),f=e(c);if(d.length!==f.length)return!1;for(var g=0;g<d.length;g++)if(!a(d[g],f[g]))return!1;return!0}}this.encode=h(d(a,"encode")),this.decode=h(d(a,"decode")),this.is=h(d(a,"is"),!0),this.equals=i(d(a,"equals")),this.pattern=a.pattern,this.$arrayMode=b}if(!a)return this;if("auto"===a&&!b)throw new Error("'auto' array mode is for query parameters only");return new d(this,a)},b.module("ui.router.util").provider("$urlMatcherFactory",s),b.module("ui.router.util").run(["$urlMatcherFactory",function(){}]),t.$inject=["$locationProvider","$urlMatcherFactoryProvider"],b.module("ui.router.router").provider("$urlRouter",t),u.$inject=["$urlRouterProvider","$urlMatcherFactoryProvider"],b.module("ui.router.state").value("$stateParams",{}).provider("$state",u),v.$inject=[],b.module("ui.router.state").provider("$view",v),b.module("ui.router.state").provider("$uiViewScroll",w),x.$inject=["$state","$injector","$uiViewScroll","$interpolate"],y.$inject=["$compile","$controller","$state","$interpolate"],b.module("ui.router.state").directive("uiView",x),b.module("ui.router.state").directive("uiView",y),C.$inject=["$state","$timeout"],D.$inject=["$state","$stateParams","$interpolate"],b.module("ui.router.state").directive("uiSref",C).directive("uiSrefActive",D).directive("uiSrefActiveEq",D),E.$inject=["$state"],F.$inject=["$state"],b.module("ui.router.state").filter("isState",E).filter("includedByState",F)}(window,window.angular);
 define("uiRouter", ["angular"], function(){});
 
-define('controllers',[
-  'angular'
-], function(
-  angular
-) {
-  angular.module('listy.controllers', [])
+(function() {
+  
+  define('controllers/recognizeCtrl',[], function() {
+    return ['$scope', 'Camera', 'Canvas', 'api', 'Feat', 'FileReader', 'Contours', 'CV', '$window', function($scope, Camera, Canvas, api, Feat, FileReader, Contours, CV, $window) {
+      var vm = this;
 
-  .controller('DashCtrl', ['$scope', 'Camera', 'Canvas', 'api', 'Feat', 'FileReader', 'Contours', 'CV', function($scope, Camera, Canvas, api, Feat, FileReader, Contours, CV) {
-    //Contours.closeContour();
-    //CV.findContours();
-    $scope.reprocessCanny = reprocessCanny;
-    $scope.drawContoursPaths = drawContoursPaths;
+      vm.padding = 15;
+      vm.windowWidth = $window.innerWidth;
+      var size = Math.floor(vm.windowWidth / 2 - vm.padding);
+      vm.canvas = {
+        width: size,
+        height: size
+      };
 
-    $scope.options = {
-      blurRadius: 8,
-      blurRadius2: 8,
-      from: 0,
-      to: 10,
-      pathLength: 1600,
-      treshold: 10
-    };
+      vm.options = {
+        blurRadius: 8,
+        blurRadius2: 2,
+        from: 0,
+        to: 1,
+        pathLength: Math.floor(vm.windowWidth - vm.padding),
+        pathHeight: Math.floor(vm.windowWidth / 1.618),
+        treshold: 10
+      };
 
-    $scope.getFile = function(file) {
-      FileReader.readAsDataUrl(file, $scope)
-        .then(function(result) {
-          $scope.imageSrc = result;
-          // console.log("result = ", result);
-          drawImages(result, 'previewCanvas');
+      var cannyCtx;
+      var previewCtx;
+      var height;
+      var width;
+
+      vm.drawContoursPaths = drawContoursPaths;
+      vm.getFile = getFile;
+      vm.reprocessCanny = reprocessCanny;
+      vm.takePicture = takePicture;
+
+      // TODO: remove this for production
+      drawImages('img/test.jpg', 'previewCanvas');
+
+      function getFile(file) {
+        FileReader.readAsDataUrl(file, $scope)
+          .then(function(result) {
+            vm.imageSrc = result;
+            // console.log("result = ", result);
+            drawImages(result, 'previewCanvas');
+          });
+      };
+
+      function takePicture() {
+        // console.log('takePicture!');
+        Camera.takePicture().then(function(neco) {
+          setTimeout(function() {
+            // console.log('neco = ', neco);
+          }, 0);
         });
-    };
-
-    $scope.takePicture = function() {
-      // console.log('takePicture!');
-      Camera.takePicture().then(function(neco) {
-        setTimeout(function() {
-          // console.log('neco = ', neco);
-        }, 0);
-      });
-    };
-
-    var previewCtx;
-    var width;
-    var height;
-    var imgPreview;
-    var canny;
-    drawImages('img/test.jpg', 'previewCanvas');
-
-    function drawImages(image, canvasID) {
-      previewCtx = Canvas.getContext(canvasID);
-      Canvas.canvasClear(previewCtx);
-
-      var img = new Image();
-      img.onload = function() {
-        width = img.width;
-        height = img.height;
-        imgPreview = img;
-        previewCtx.drawImage(imgPreview, 0, 0);
-
-        var imageData = previewCtx.getImageData(0, 0, width, height);
-        //drawBW(imageData, width, height, 'bwCanvas');
-        canny = drawCanny(imageData, width, height, 'cannyCanvas');
-
-        drawContours(canny);
-
       };
-      img.src = image;
-    }
 
-    function getLongest(arrayOfArrays){
-      var indexOfLongest = 0;
-      for (var i = 0; i < arrayOfArrays.length; i++) {
-        if(arrayOfArrays[indexOfLongest].length < arrayOfArrays[i].length){
-          indexOfLongest = i;
+      function drawImages(image, canvasID) {
+        previewCtx = Canvas.getContext(canvasID);
+        Canvas.canvasClear(previewCtx);
+
+        var img = new Image();
+
+        img.onload = function() {
+          width = vm.canvas.width;
+          vm.canvas.height = Math.floor(vm.canvas.width * (img.height / img.width));
+          height = vm.canvas.height;
+          previewCtx.canvas.height = height;
+          if (!!cannyCtx) {
+            cannyCtx.canvas.height = height;
+            Canvas.canvasClear(cannyCtx);
+          }
+
+          previewCtx.drawImage(img, 0, 0, width, height);
+
+          reprocessCanny();
+        };
+        img.src = image;
+      }
+
+      function getLongest(arrayOfArrays) {
+        var indexOfLongest = 0;
+        for (var i = 0; i < arrayOfArrays.length; i++) {
+          if (arrayOfArrays[indexOfLongest].length < arrayOfArrays[i].length) {
+            indexOfLongest = i;
+          }
         }
+        return [arrayOfArrays[indexOfLongest]];
       }
-      return [arrayOfArrays[indexOfLongest]];
-    }
 
-    function drawBW(imageData, width, height, canvasID) {
-      var imgU8 = Feat.getMatrix(width, height);
-      var ctx = Canvas.getContext(canvasID);
 
-      var imgResult = Feat.grayScale(imageData, width, height, imgU8);
+      function drawCanny(imageData, width, height, canvasID) {
+        var imgU8 = Feat.getMatrix(width, height);
+        cannyCtx = Canvas.getContext(canvasID);
 
-      Canvas.renderImageData(imgResult.imageData, imgResult.imgU8, ctx);
-      return imgResult;
-    }
-    var cannyCtx;
-    function drawCanny(imageData, width, height, canvasID) {
-      var imgU8 = Feat.getMatrix(width, height);
-      var ctx = Canvas.getContext(canvasID);
-      Canvas.canvasClear(ctx);
-      cannyCtx = ctx;
-      var options = {
-        lowThreshold: 10,
-        highThreshold: 100,
-        blurRadius: $scope.options.blurRadius,
-        blurRadius2: $scope.options.blurRadius2
+        var options = {
+          lowThreshold: 10,
+          highThreshold: 100,
+          blurRadius: vm.options.blurRadius,
+          blurRadius2: vm.options.blurRadius2
+        };
+
+        var imgResult = Feat.canny(imageData, width, height, imgU8, options);
+
+        Canvas.renderImageData(imgResult.imageData, imgResult.imgU8, cannyCtx);
+        return imgResult;
+      }
+
+      function reprocessCanny() {
+        // FIXME: new image disappearing after reprocess
+        var imageData = previewCtx.getImageData(0, 0, width, height);
+        var canny = drawCanny(imageData, width, height, 'cannyCanvas');
+        drawContours(canny);
+      }
+
+      function drawContours(canny) {
+        var pathCtx = Canvas.getContext('pathCanvas');
+        Canvas.canvasClear(pathCtx);
+
+        var cannyCanvas = document.getElementById('cannyCanvas');
+        var contours = Contours.findContours(cannyCanvas, 100, 0, vm.options.treshold);
+        // console.log("contours = ", contours);
+        vm.contours = Contours.findContours(cannyCanvas, 255, 0, 125);
+
+        //vm.contours = getLongest(vm.contours);
+
+        var centerPoint = Canvas.getCenter(vm.contours[0]);
+        Canvas.drawPoint(cannyCtx, centerPoint);
+        var path = Canvas.getPath(vm.contours[0], centerPoint)
+        Canvas.canvasClear(pathCtx)
+        Canvas.drawPath(pathCtx, path, 'blue', 1, vm.options.pathLength, vm.options.pathHeight, true);
+
+        //console.log("path = ", path);
+        // console.log("centerPoint = ", centerPoint);
+        // console.log("vm.contours = ", vm.contours);
+        drawContoursPaths();
+      }
+
+      function drawContoursPaths() {
+        if (vm.contours.length > 0 && vm.options.to > vm.contours.length) {
+          vm.options.to = vm.contours.length;
+        }
+        if (vm.options.from >= vm.options.to) {
+          vm.options.from = vm.options.to - 1;
+        }
+        if (vm.options.from < 0) {
+          vm.options.from = 0;
+        }
+        //cannyCtx.drawImage(canny.imageData, 0, 0);
+        for (var i = vm.options.from; i < vm.options.to; i++) {
+          Canvas.drawPath(cannyCtx, vm.contours[i], 'green', 3);
+        }
       };
 
-      var imgResult = Feat.canny(imageData, width, height, imgU8, options);
+    }]
+  });
+})();
 
-      Canvas.renderImageData(imgResult.imageData, imgResult.imgU8, ctx);
-      return imgResult;
-    }
+(function() {
+  
+  define('controllers/treesCtrl',[], function() {
+    return ['API', '$scope', 'TreeService', function(API, $scope, TreeService) {
+      var vm = this;
+      vm.imgPath = API.images;
+      vm.trees = TreeService.all();
+      vm.remove = function(tree) {
+        TreeService.remove(tree);
+      };
+    }]
+  });
+})();
 
-    function reprocessCanny() {
-      var imageData = previewCtx.getImageData(0, 0, width, height);
-      canny = drawCanny(imageData, width, height, 'cannyCanvas');
-      drawContours(canny);
-    }
+(function() {
+  
+  define('controllers/treeDetailCtrl',[], function() {
+    return ['$scope', '$stateParams', 'TreeService', function($scope, $stateParams, TreeService) {
+      var vm = this;
+      vm.tree = TreeService.get($stateParams.treeId);
+    }]
+  });
+})();
 
-    function drawContours(canny) {
-      var ctCtx = Canvas.getContext('cannyCanvas');
-      var pathCtx = Canvas.getContext('pathCanvas');
-      Canvas.canvasClear(ctCtx);
-      Canvas.canvasClear(pathCtx);
-      Canvas.renderImageData(canny.imageData, canny.imgU8, ctCtx);
-      var cannyCanvas = document.getElementById('cannyCanvas');
-      var contours = Contours.findContours(cannyCanvas, 100, 0, $scope.options.treshold);
-      // console.log("contours = ", contours);
-      $scope.contours = Contours.findContours(cannyCanvas, 255, 0, 125);
+(function() {
+  
+  define('controllers/controllers',[
+    'angular',
 
-      //$scope.contours = getLongest($scope.contours);
+    'controllers/recognizeCtrl',
+    'controllers/treesCtrl',
+    'controllers/treeDetailCtrl'
+  ], function(
+    angular,
+    recognizeCtrl,
+    treesCtrl,
+    treeDetailCtrl
+  ) {
+    var module = angular.module('listy.controllers', []);
 
-      var centerPoint = Canvas.getCenter($scope.contours[0]);
-      Canvas.drawPoint(cannyCtx, centerPoint);
-      var path = Canvas.getPath($scope.contours[0], centerPoint, 400)
-      Canvas.canvasClear(pathCtx)
-      Canvas.drawPath(pathCtx, path, 'blue', $scope.options.pathLength, true);
 
-      //console.log("path = ", path);
-      // console.log("centerPoint = ", centerPoint);
-      // console.log("$scope.contours = ", $scope.contours);
-      drawContoursPaths();
-    }
-
-    function drawContoursPaths(){
-      if($scope.contours.length > 0 && $scope.options.to > $scope.contours.length){
-        $scope.options.to = $scope.contours.length;
-      }
-      if($scope.options.from >= $scope.options.to) {
-        $scope.options.from = $scope.options.to - 1;
-      }
-      if($scope.options.from < 0){
-        $scope.options.from = 0;
-      }
-      //cannyCtx.drawImage(canny.imageData, 0, 0);
-      for (var i = $scope.options.from; i < $scope.options.to ; i++) {
-        Canvas.drawPath(cannyCtx, $scope.contours[i]);
-      }
-    };
-
-  }])
-
-  .controller('ChatsCtrl', function($scope, TreeService) {
-    // With the new view caching in Ionic, Controllers are only called
-    // when they are recreated or on app start, instead of every page change.
-    // To listen for when this page is active (for example, to refresh data),
+    module.controller({
+      recognizeCtrl: recognizeCtrl,
+      treesCtrl: treesCtrl,
+      treeDetailCtrl: treeDetailCtrl
+    });
+    // To listen for when any page is active (for example, to refresh data),
     // listen for the $ionicView.enter event:
     //
     //$scope.$on('$ionicView.enter', function(e) {
     //});
-
-    $scope.chats = TreeService.all();
-    $scope.remove = function(chat) {
-      TreeService.remove(chat);
-    };
-  })
-
-  .controller('ChatDetailCtrl', function($scope, $stateParams, TreeService) {
-    $scope.chat = TreeService.get($stateParams.chatId);
-  })
-
-  .controller('AccountCtrl', function($scope) {
-    $scope.settings = {
-      enableFriends: true
-    };
   });
-});
+})();
 
-define('directives/ngFileSelectDirective',[], function() {
+(function() {
   
-  var ngFileSelect = function() {
-    return {
-      link: function($scope, el) {
-        el.bind("change", function(e) {
-          $scope.file = (e.srcElement || e.target).files[0];
-          $scope.getFile($scope.file);
-        });
-      }
+  define('directives/ngFileSelectDirective',[], function() {
+    var ngFileSelect = function() {
+      return {
+        link: function($scope, el) {
+          el.bind("change", function(e) {
+            $scope.vm.file = (e.srcElement || e.target).files[0];
+            $scope.vm.getFile($scope.vm.file);
+          });
+        }
+      };
     };
-  };
 
-  return ngFileSelect;
-});
+    return ngFileSelect;
+  });
+})();
 
-define('directives/directives',['require','angular','directives/ngFileSelectDirective'],function(require) {
+(function() {
   
+  define('directives/directives',['require','angular','directives/ngFileSelectDirective'],function(require) {
 
-  var angular = require('angular'),
-    directives = angular.module('listy.directives', []);
+    var angular = require('angular'),
+      directives = angular.module('listy.directives', []);
 
     directives.directive('ngFileSelect', require('directives/ngFileSelectDirective'));
 
-  return directives;
+    return directives;
 
-});
+  });
+})();
 
 /**
  * @license
@@ -12963,7 +12996,10 @@ define('services/CameraService',['angular'], function(angular) {
 
   var factory = function($log, $q, $window) {
     function showWarning(){
+      var deferred = $q.defer();
       $log.warn('Camera plugin is not available outside cordova app.');
+      deferred.reject();
+      return deferred.promise;
     }
 
     if (!$window.Camera) {
@@ -13032,397 +13068,413 @@ define('services/CameraService',['angular'], function(angular) {
   return factory;
 });
 
-define('services/CanvasService',[], function() {
+(function() {
   
-  var factory = function($log) {
-    function canvasClear(ctx) {
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    }
-
-    function drawPath(ctx, path, color, length, isFunction) {
-      ctx.beginPath();
-      var zero = ctx.canvas.height;
-      if (isFunction) {
-        ctx.moveTo(path[0].x, zero - path[0].y);
-      } else {
-        ctx.moveTo(path[0].x, path[0].y);
+  define('services/CanvasService',[], function() {
+    var factory = function($log) {
+      function canvasClear(ctx) {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       }
-      var step = length ? (path.length / length) : 1;
-      // console.log("path = ", path);
-      // console.log("length = ", length);
-      // console.log("step = ", step);
-      for (var i = 1; i < path.length; i++) {
-        if (isFunction) {
-          ctx.lineTo(path[i].x / step, zero - path[i].y);
-        } else {
-          ctx.lineTo(path[i].x / step, path[i].y);
+
+      function drawPath(ctx, path, color, lineWidth, length, height, isFunction) {
+        if (path && path.length) {
+          ctx.beginPath();
+          if (isFunction) {
+            ctx.moveTo(path[0].x, height * (1 - path[0].y));
+          } else {
+            ctx.moveTo(path[0].x, path[0].y);
+          }
+          var step = length ? (path.length / length) : 1;
+          // console.log("path = ", path);
+          // console.log("length = ", length);
+          // console.log("step = ", step);
+          for (var i = 1; i < path.length; i++) {
+            if (isFunction) {
+              ctx.lineTo(path[i].x / step, height * (1 - path[i].y));
+            } else {
+              ctx.lineTo(path[i].x / step, path[i].y);
+            }
+          }
+          ctx.lineWidth = lineWidth || 3;
+          ctx.strokeStyle = color || 'green';
+          ctx.stroke();
         }
       }
-      ctx.strokeStyle = color || 'green';
-      ctx.stroke();
-    }
 
-    function drawPoint(ctx, point, color) {
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
-      ctx.strokeStyle = color || 'red';
-      ctx.stroke();
-    }
-
-    function getCenter(points) {
-      var x = 0;
-      var y = 0;
-      for (var i = 0; i < points.length; i++) {
-        x += points[i].x;
-        y += points[i].y;
+      function drawPoint(ctx, point, color) {
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
+        ctx.strokeStyle = color || 'red';
+        ctx.stroke();
       }
-      return {
-        x: Math.round(x / points.length),
-        y: Math.round(y / points.length)
-      };
-    }
 
-    function getDistance(A, B) {
-      return Math.sqrt(Math.pow(A.x - B.x, 2) + Math.pow(A.y - B.y, 2));
-    }
-
-    function getPath(points, center, height) {
-      height = height || 400;
-      var path = [];
-      var maxDist = 0;
-      var dist = 0;
-      for (var i = 0; i < points.length; i++) {
-        dist = getDistance(points[i], center);
-        maxDist = dist > maxDist ? dist : maxDist;
-        path[i] = {
-          x: i,
-          y: getDistance(points[i], center)
+      function getCenter(points) {
+        if (!points) {
+          points = {
+            lenght: 0
+          };
+        }
+        var x = 0;
+        var y = 0;
+        for (var i = 0; i < points.length; i++) {
+          x += points[i].x;
+          y += points[i].y;
+        }
+        return {
+          x: Math.round(x / points.length),
+          y: Math.round(y / points.length)
         };
       }
-      for (var i = 0; i < points.length; i++) {
-        path[i].y = (path[i].y / maxDist) * height;
-      }
-      return path;
-    }
 
-    function getContext(canvasID) {
-      var canvas = document.getElementById(canvasID);
-      return canvas.getContext('2d');
-    }
-
-    function renderImageData(imageData, imgU8, ctx) {
-      // render result back to canvas
-      var dataU32 = new Uint32Array(imageData.data.buffer);
-      var alpha = (0xff << 24);
-      var i = imgU8.cols * imgU8.rows,
-        pix = 0;
-      while (--i >= 0) {
-        pix = imgU8.data[i];
-        dataU32[i] = alpha | (pix << 16) | (pix << 8) | pix;
+      function getDistance(A, B) {
+        return Math.sqrt(Math.pow(A.x - B.x, 2) + Math.pow(A.y - B.y, 2));
       }
 
-      ctx.putImageData(imageData, 0, 0);
-    }
+      function getPath(points, center) {
+        if (!points) {
+          points = {
+            lenght: 0
+          };
+        }
+        var path = [];
+        var maxDist = 0;
+        var dist = 0;
+        for (var i = 0; i < points.length; i++) {
+          dist = getDistance(points[i], center);
+          maxDist = dist > maxDist ? dist : maxDist;
+          path[i] = {
+            x: i,
+            y: getDistance(points[i], center)
+          };
+        }
+        for (var i = 0; i < points.length; i++) {
+          path[i].y = (path[i].y / maxDist);
+        }
+        return path;
+      }
 
-    return {
-      canvasClear: canvasClear,
-      drawPath: drawPath,
-      getCenter: getCenter,
-      getContext: getContext,
-      getPath: getPath,
-      drawPoint: drawPoint,
-      renderImageData: renderImageData
+      function getContext(canvasID) {
+        var canvas = document.getElementById(canvasID);
+        return canvas.getContext('2d');
+      }
+
+      function renderImageData(imageData, imgU8, ctx) {
+        // render result back to canvas
+        var dataU32 = new Uint32Array(imageData.data.buffer);
+        var alpha = (0xff << 24);
+        var i = imgU8.cols * imgU8.rows,
+          pix = 0;
+        while (--i >= 0) {
+          pix = imgU8.data[i];
+          dataU32[i] = alpha | (pix << 16) | (pix << 8) | pix;
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+      }
+
+      return {
+        canvasClear: canvasClear,
+        drawPath: drawPath,
+        getCenter: getCenter,
+        getContext: getContext,
+        getPath: getPath,
+        drawPoint: drawPoint,
+        renderImageData: renderImageData
+      };
     };
-  };
 
-  factory.$inject = ['$log'];
-  return factory;
-});
+    factory.$inject = ['$log'];
+    return factory;
+  });
+})();
 
 /*
+ * https://github.com/Doodle3D/Contour-finding-experiment
  * sources (re-implement basic finder and then add iterative functionality?):
  * - https://github.com/Dkendal/Moore-Neighbor_Contour_Tracer/blob/master/ContourTrace.cs
  * - http://www.imageprocessingplace.com/downloads_V3/root_downloads/tutorials/contour_tracing_Abeer_George_Ghuneim/moore.html
  */
-define('services/ContoursService',[], function() {
+(function() {
   
-  var factory = function ContourFinder() {
+  define('services/ContoursService',[], function() {
+    var factory = function ContourFinder() {
 
-    this.pixelsWidth; // pixels width
-    this.pixelsHeight; // pixels height
-    this.pixels; // pixels (single array of r,g,b,a values of image)
-    this.fColor; // foreground color
-    this.bColor; // background color
-    this.threshold;
-    //this.maxContourPoints = Infinity; //was 500*4
-    this.maxContourPoints = 500 * 500;
-    this.allContours = [];
-
-    this.offset4 = function(x, y) {
-      return (y * this.pixelsWidth + x) * 4;
-    };
-    this.offset = function(x, y) {
-      return (y * this.pixelsWidth + x) * 4;
-    };
-
-    this.getPixel = function(x, y) {
-      return {
-        r: this.pixels[this.offset4(x, y)],
-        g: this.pixels[this.offset4(x, y) + 1],
-        b: this.pixels[this.offset4(x, y) + 2],
-        a: this.pixels[this.offset4(x, y) + 3]
-      };
-    };
-
-    //	this.setPixel = function(x, y, pixel) {
-    //		this.pixels[this.offset4(x, y)] = pixel.r;
-    //		this.pixels[this.offset4(x, y) + 1] = pixel.g;
-    //		this.pixels[this.offset4(x, y) + 2] = pixel.b;
-    //		this.pixels[this.offset4(x, y) + 3] = pixel.a;
-    //	}
-    this.setPixel = function(x, y, pixel) {
-      this.pixels[this.offset4(x, y)] = pixel[0];
-      this.pixels[this.offset4(x, y) + 1] = pixel[1];
-      this.pixels[this.offset4(x, y) + 2] = pixel[2];
-      this.pixels[this.offset4(x, y) + 3] = pixel[3];
-    };
-
-
-    this.findContours = function(image, foregroundColor, backgroundColor, threshold) {
+      this.pixelsWidth; // pixels width
+      this.pixelsHeight; // pixels height
+      this.pixels; // pixels (single array of r,g,b,a values of image)
+      this.fColor; // foreground color
+      this.bColor; // background color
+      this.threshold;
+      //this.maxContourPoints = Infinity; //was 500*4
+      this.maxContourPoints = 500 * 500;
       this.allContours = [];
-      var w = this.pixelsWidth = image.width;
-      var h = this.pixelsHeight = image.height;
-      this.fColor = foregroundColor;
-      this.bColor = backgroundColor;
-      this.threshold = threshold;
 
-      // create a new pixel array
-      var imageCtx = image.getContext('2d');
-      var imageData = imageCtx.getImageData(0, 0, w, h);
-      // console.log("imageData: ",imageData);
-      var pixels = this.pixels = imageData.data;
-      // console.log("pixels: ",pixels);
-      var prevValue = 0;
+      this.offset4 = function(x, y) {
+        return (y * this.pixelsWidth + x) * 4;
+      };
+      this.offset = function(x, y) {
+        return (y * this.pixelsWidth + x) * 4;
+      };
 
-      for (var y = 0; y < h; y++) {
-        for (var x = 0; x < w; x++) {
-          var pix = this.getPixel(x, y);
-          var factor = ((pix.r * .3 + pix.g * .59 + pix.b * .11))
+      this.getPixel = function(x, y) {
+        return {
+          r: this.pixels[this.offset4(x, y)],
+          g: this.pixels[this.offset4(x, y) + 1],
+          b: this.pixels[this.offset4(x, y) + 2],
+          a: this.pixels[this.offset4(x, y) + 3]
+        };
+      };
 
-          var value = (factor > threshold) ? 255 : 0; // threshold
+      //	this.setPixel = function(x, y, pixel) {
+      //		this.pixels[this.offset4(x, y)] = pixel.r;
+      //		this.pixels[this.offset4(x, y) + 1] = pixel.g;
+      //		this.pixels[this.offset4(x, y) + 2] = pixel.b;
+      //		this.pixels[this.offset4(x, y) + 3] = pixel.a;
+      //	}
+      this.setPixel = function(x, y, pixel) {
+        this.pixels[this.offset4(x, y)] = pixel[0];
+        this.pixels[this.offset4(x, y) + 1] = pixel[1];
+        this.pixels[this.offset4(x, y) + 2] = pixel[2];
+        this.pixels[this.offset4(x, y) + 3] = pixel[3];
+      };
 
 
-          //this.setPixel(x, y, { r: value, g: value, b: value, a: pix.a });
-          this.setPixel(x, y, [value, value, value, pix.a]);
-        }
-      }
+      this.findContours = function(image, foregroundColor, backgroundColor, threshold) {
+        this.allContours = [];
+        var w = this.pixelsWidth = image.width;
+        var h = this.pixelsHeight = image.height;
+        this.fColor = foregroundColor;
+        this.bColor = backgroundColor;
+        this.threshold = threshold;
 
-      for (var y = 0; y < h; y++) {
-        for (var x = 0; x < w; x++) {
-          var pix = this.getPixel(x, y);
+        // create a new pixel array
+        var imageCtx = image.getContext('2d');
+        var imageData = imageCtx.getImageData(0, 0, w, h);
+        // console.log("imageData: ",imageData);
+        var pixels = this.pixels = imageData.data;
+        // console.log("pixels: ",pixels);
+        var prevValue = 0;
 
-          var value = pix.g;
-          value = (value > threshold) ? 255 : 0;
-          // if we enter a foreGround color and red isn't 0 (already stored as contour)
-          if (prevValue === backgroundColor && value === foregroundColor && pix.r != 0) {
-            var points = this.followContour({
-              x: x,
-              y: y
-            });
-            this.allContours.push(points);
-            return this.allContours;
+        for (var y = 0; y < h; y++) {
+          for (var x = 0; x < w; x++) {
+            var pix = this.getPixel(x, y);
+            var factor = ((pix.r * .3 + pix.g * .59 + pix.b * .11))
+
+            var value = (factor > threshold) ? 255 : 0; // threshold
+
+
+            //this.setPixel(x, y, { r: value, g: value, b: value, a: pix.a });
+            this.setPixel(x, y, [value, value, value, pix.a]);
           }
-
-          //pix.r = 255;
-          this.setPixel(x, y, [pix.r, pix.g, pix.b, pix.a]);
-          prevValue = value;
         }
-      }
 
-      /*for (var i = 0, n = pixels.length; i < n; i += 4) {
-      	var grayscale = pixels[i  ] * .3 + pixels[i+1] * .59 + pixels[i+2] * .11;
+        for (var y = 0; y < h; y++) {
+          for (var x = 0; x < w; x++) {
+            var pix = this.getPixel(x, y);
 
-      	alpha = pixels[i+3];
-      	//console.log("alpha: ",alpha);
-      	var value = (alpha > threshold)? 255 : 0;
-      	//console.log("value: ",value);
-      	/*pixels[i  ] = value; 	// red
-      	pixels[i+1] = value; 	// green
-      	pixels[i+2] = value; 	// blue
-      	pixels[i+3] = value; 	// alpha*/
-      /*
-      	if(alpha > threshold) {
-      		pixels[i  ] = 255; 	// red
-      	}
-      }*/
+            var value = pix.g;
+            value = (value > threshold) ? 255 : 0;
+            // if we enter a foreGround color and red isn't 0 (already stored as contour)
+            if (prevValue === backgroundColor && value === foregroundColor && pix.r != 0) {
+              var points = this.followContour({
+                x: x,
+                y: y
+              });
+              this.allContours.push(points);
+              return this.allContours;
+            }
 
-      /*for (var y = 0; y < height; y++) {
-      	inpos = y * width * 4; // *4 for 4 ints per pixel
-      	outpos = inpos + w2 * 4
-      	for (var x = 0; x < w2; x++) {
-      		r = imageData.data[inpos++] / 3; // less red
-      		g = imageData.data[inpos++] / 3; // less green
-      		b = imageData.data[inpos++] * 5; // MORE BLUE
-      		a = imageData.data[inpos++];     // same alpha
+            //pix.r = 255;
+            this.setPixel(x, y, [pix.r, pix.g, pix.b, pix.a]);
+            prevValue = value;
+          }
+        }
 
-      		b = Math.min(255, b); // clamp to [0..255]
+        /*for (var i = 0, n = pixels.length; i < n; i += 4) {
+        	var grayscale = pixels[i  ] * .3 + pixels[i+1] * .59 + pixels[i+2] * .11;
 
-      		imageData.data[outpos++] = r;
-      		imageData.data[outpos++] = g;
-      		imageData.data[outpos++] = b;
-      		imageData.data[outpos++] = a;
-      	}
-      }*/
+        	alpha = pixels[i+3];
+        	//console.log("alpha: ",alpha);
+        	var value = (alpha > threshold)? 255 : 0;
+        	//console.log("value: ",value);
+        	/*pixels[i  ] = value; 	// red
+        	pixels[i+1] = value; 	// green
+        	pixels[i+2] = value; 	// blue
+        	pixels[i+3] = value; 	// alpha*/
+        /*
+        	if(alpha > threshold) {
+        		pixels[i  ] = 255; 	// red
+        	}
+        }*/
 
-      // copy the image data back onto the canvas
-      imageCtx.putImageData(imageData, 0, 0); // at coords 0,0
-      return this.allContours;
-    };
+        /*for (var y = 0; y < height; y++) {
+        	inpos = y * width * 4; // *4 for 4 ints per pixel
+        	outpos = inpos + w2 * 4
+        	for (var x = 0; x < w2; x++) {
+        		r = imageData.data[inpos++] / 3; // less red
+        		g = imageData.data[inpos++] / 3; // less green
+        		b = imageData.data[inpos++] * 5; // MORE BLUE
+        		a = imageData.data[inpos++];     // same alpha
 
-    this.followContour = function(startPoint) {
-      //console.log("followContour @",startPoint);
-      var points = []; // start new contour
-      points.push(startPoint);
-      var w = this.pixelsWidth;
-      var h = this.pixelsHeight;
+        		b = Math.min(255, b); // clamp to [0..255]
+
+        		imageData.data[outpos++] = r;
+        		imageData.data[outpos++] = g;
+        		imageData.data[outpos++] = b;
+        		imageData.data[outpos++] = a;
+        	}
+        }*/
+
+        // copy the image data back onto the canvas
+        imageCtx.putImageData(imageData, 0, 0); // at coords 0,0
+        return this.allContours;
+      };
+
+      this.followContour = function(startPoint) {
+        //console.log("followContour @",startPoint);
+        var points = []; // start new contour
+        points.push(startPoint);
+        var w = this.pixelsWidth;
+        var h = this.pixelsHeight;
 
 
-      var point = startPoint;
-      var numPoints = 0;
+        var point = startPoint;
+        var numPoints = 0;
 
-      // define neighborhood (with: x offset, y offset, index offset, next neighborhood element to check)
-      //		var neighborhood = [
-      //			[ 1,  0,  1,   7], // east
-      //			[ 1,  1,  w+1, 0], // south-east
-      //			[ 0,  1,  w,   1], // south
-      //			[-1,  1,  w-1, 2], // south-west
-      //			[-1,  0, -1,   3], // west
-      //			[-1, -1, -w-1, 4], // north-west
-      //			[ 0, -1, -w,   5], // north
-      //			[ 1, -1, -w+1, 6]  // north-east
-      //		];
+        // define neighborhood (with: x offset, y offset, index offset, next neighborhood element to check)
+        //		var neighborhood = [
+        //			[ 1,  0,  1,   7], // east
+        //			[ 1,  1,  w+1, 0], // south-east
+        //			[ 0,  1,  w,   1], // south
+        //			[-1,  1,  w-1, 2], // south-west
+        //			[-1,  0, -1,   3], // west
+        //			[-1, -1, -w-1, 4], // north-west
+        //			[ 0, -1, -w,   5], // north
+        //			[ 1, -1, -w+1, 6]  // north-east
+        //		];
 
-      //		var neighborhood = [
-      //            { xd: -1, yd:  0, offs: -1,   next: 7 }, // west
-      //            { xd: -1, yd: -1, offs: -w-1, next: 0 }, // north-west
-      //            { xd:  0, yd: -1, offs: -w,   next: 1 }, // north
-      //            { xd:  1, yd: -1, offs: -w+1, next: 2 }, // north-east
-      //            { xd:  1, yd:  0, offs:  1,   next: 3 }, // east
-      //            { xd:  1, yd:  1, offs:  w+1, next: 4 }, // south-east
-      //            { xd:  0, yd:  1, offs:  w,   next: 5 }, // south
-      //            { xd: -1, yd:  1, offs:  w-1, next: 6 }  // south-west
-      //		];
+        //		var neighborhood = [
+        //            { xd: -1, yd:  0, offs: -1,   next: 7 }, // west
+        //            { xd: -1, yd: -1, offs: -w-1, next: 0 }, // north-west
+        //            { xd:  0, yd: -1, offs: -w,   next: 1 }, // north
+        //            { xd:  1, yd: -1, offs: -w+1, next: 2 }, // north-east
+        //            { xd:  1, yd:  0, offs:  1,   next: 3 }, // east
+        //            { xd:  1, yd:  1, offs:  w+1, next: 4 }, // south-east
+        //            { xd:  0, yd:  1, offs:  w,   next: 5 }, // south
+        //            { xd: -1, yd:  1, offs:  w-1, next: 6 }  // south-west
+        //		];
 
-      //		var neighborhood = [
-      //	        [-1,  0, -1,   7],
-      //	        [-3, -1, -w-3, 7],
-      //	        [-2, -1, -w-2, 1],
-      //	        [-1, -1, -w-1, 1],
-      //	        [ 1,  0,  1,   3],
-      //	        [ 3,  1,  w+3, 3],
-      //	        [ 2,  1,  w+2, 5],
-      //	        [ 1,  1,  w+1, 5]
-      //        ];
-      var neighborhood = [{
-          xd: 1,
-          yd: 0,
-          offs: 1,
-          next: 3
-        }, // east
-        {
-          xd: 0,
-          yd: 1,
-          offs: w,
-          next: 0
-        }, // south
-        {
-          xd: -1,
-          yd: 0,
-          offs: -1,
-          next: 1
-        }, // west
-        {
-          xd: 0,
-          yd: -1,
-          offs: -w,
-          next: 2
-        } // north
-      ];
+        //		var neighborhood = [
+        //	        [-1,  0, -1,   7],
+        //	        [-3, -1, -w-3, 7],
+        //	        [-2, -1, -w-2, 1],
+        //	        [-1, -1, -w-1, 1],
+        //	        [ 1,  0,  1,   3],
+        //	        [ 3,  1,  w+3, 3],
+        //	        [ 2,  1,  w+2, 5],
+        //	        [ 1,  1,  w+1, 5]
+        //        ];
+        var neighborhood = [{
+            xd: 1,
+            yd: 0,
+            offs: 1,
+            next: 3
+          }, // east
+          {
+            xd: 0,
+            yd: 1,
+            offs: w,
+            next: 0
+          }, // south
+          {
+            xd: -1,
+            yd: 0,
+            offs: -1,
+            next: 1
+          }, // west
+          {
+            xd: 0,
+            yd: -1,
+            offs: -w,
+            next: 2
+          } // north
+        ];
 
-      var prevIndex;
-      var nextNeighbor = 0; // starting point for neighborhood search (index for neighborhood array)
-      do {
-        //console.log("  point: ",point.x,point.y);
+        var prevIndex;
+        var nextNeighbor = 0; // starting point for neighborhood search (index for neighborhood array)
+        do {
+          //console.log("  point: ",point.x,point.y);
 
-        // go clockwise trough neighbors
-        var index = this.offset4(point.x, point.y);
-        this.pixels[index] = 0; // r
-        this.pixels[index + 2] = 0; // b
-        var newPoint = {};
-        //console.log("  index: ",index);
-        var i = nextNeighbor;
-        //console.log("    nextNeighbor: ",nextNeighbor);
-        for (var j = 0; j < neighborhood.length; j++) {
+          // go clockwise trough neighbors
+          var index = this.offset4(point.x, point.y);
+          this.pixels[index] = 0; // r
+          this.pixels[index + 2] = 0; // b
+          var newPoint = {};
+          //console.log("  index: ",index);
+          var i = nextNeighbor;
+          //console.log("    nextNeighbor: ",nextNeighbor);
+          for (var j = 0; j < neighborhood.length; j++) {
 
-          //console.log("    neighbor: ",i);
-          var nIndex = index + neighborhood[i].offs * 4;
-          //console.log("      neighbor index: ",nIndex);
-          //console.log("      neighbor g index: ",nIndex+1);
-          //console.log("      value: ",this.pixels[nIndex+1]);
-          // todo: check if in range
-          if (this.pixels[nIndex + 1] === this.fColor && nIndex != prevIndex) {
-            //console.log("      === fColor");
-            newPoint = {
-              x: point.x + neighborhood[i].xd,
-              y: point.y + neighborhood[i].yd
-            };
-            nextNeighbor = neighborhood[i].next;
+            //console.log("    neighbor: ",i);
+            var nIndex = index + neighborhood[i].offs * 4;
+            //console.log("      neighbor index: ",nIndex);
+            //console.log("      neighbor g index: ",nIndex+1);
+            //console.log("      value: ",this.pixels[nIndex+1]);
+            // todo: check if in range
+            if (this.pixels[nIndex + 1] === this.fColor && nIndex != prevIndex) {
+              //console.log("      === fColor");
+              newPoint = {
+                x: point.x + neighborhood[i].xd,
+                y: point.y + neighborhood[i].yd
+              };
+              nextNeighbor = neighborhood[i].next;
+              break;
+            }
+
+            i++;
+            i = i % neighborhood.length;
+
+          }
+          if (newPoint === undefined) {
             break;
+          } else {
+            //console.log("      new point: ",newPoint[0],newPoint[1]);
+            point = newPoint;
+            points.push(point);
+            //console.log("      points: ",this.getPoints(points));
+
           }
 
-          i++;
-          i = i % neighborhood.length;
+          prevIndex = index;
 
+          //var index = y*w*4+x*4;
+          numPoints++;
+          //console.log(point[0],startPoint[0],"  ",point[1],startPoint[1]);
+
+        } while (!(point.x === startPoint.x && point.y === startPoint.y) && numPoints < this.maxContourPoints);
+
+        this.closeContour(points);
+
+        return points;
+      };
+
+      this.closeContour = function(points) {
+        //console.log("CLOSE");
+        //console.log("pixels: ",this.pixels);
+      };
+
+      this.getPoints = function(points) {
+        var log = "";
+        for (var i = 0; i < points.length; i++) {
+          var point = points[i];
+          log += point.x + "," + point.y + " > ";
         }
-        if (newPoint === undefined) {
-          break;
-        } else {
-          //console.log("      new point: ",newPoint[0],newPoint[1]);
-          point = newPoint;
-          points.push(point);
-          //console.log("      points: ",this.getPoints(points));
-
-        }
-
-        prevIndex = index;
-
-        //var index = y*w*4+x*4;
-        numPoints++;
-        //console.log(point[0],startPoint[0],"  ",point[1],startPoint[1]);
-
-      } while (!(point.x === startPoint.x && point.y === startPoint.y) && numPoints < this.maxContourPoints);
-
-      this.closeContour(points);
-
-      return points;
-    };
-
-    this.closeContour = function(points) {
-			//console.log("CLOSE");
-      //console.log("pixels: ",this.pixels);
-    };
-
-    this.getPoints = function(points) {
-      var log = "";
-      for (var i = 0; i < points.length; i++) {
-        var point = points[i];
-        log += point.x + "," + point.y + " > ";
-      }
-      return log;
-    };
-  }
-  return factory;
-});
+        return log;
+      };
+    }
+    return factory;
+  });
+})();
 
 /*
 Copyright (c) 2011 Juan Mellado
@@ -14263,49 +14315,51 @@ define('services/CVService',[], function() {
   };
 });
 
-define('services/JSFeatService',[], function() {
+(function() {
   
-  var factory = function($log) {
-    function getMatrix(columns, rows, dataType) {
-      dataType = dataType | jsfeat.U8_t | jsfeat.C1_t;
-      return new jsfeat.matrix_t(columns, rows, dataType);
-    }
+  define('services/JSFeatService',[], function() {
+    var factory = function($log) {
+      function getMatrix(columns, rows, dataType) {
+        dataType = dataType | jsfeat.U8_t | jsfeat.C1_t;
+        return new jsfeat.matrix_t(columns, rows, dataType);
+      }
 
-    function grayScale(imageData, width, height, imgU8, code) {
-      code = code || jsfeat.COLOR_RGBA2GRAY;
-      jsfeat.imgproc.grayscale(imageData.data, width, height, imgU8, code);
+      function grayScale(imageData, width, height, imgU8, code) {
+        code = code || jsfeat.COLOR_RGBA2GRAY;
+        jsfeat.imgproc.grayscale(imageData.data, width, height, imgU8, code);
+        return {
+          imageData: imageData,
+          imgU8: imgU8
+        };
+      }
+
+      function canny(imageData, width, height, imgU8, options) {
+        var r = options.blurRadius | 0;
+        var kernelSize = (r + 1) << 1;
+        var r2 = options.blurRadius2 | 0;
+        var kernelSize2 = (r2 + 1) << 1;
+
+        jsfeat.imgproc.grayscale(imageData.data, width, height, imgU8);
+        jsfeat.imgproc.gaussian_blur(imgU8, imgU8, kernelSize, 0);
+        jsfeat.imgproc.canny(imgU8, imgU8, options.lowThreshold, options.highThreshold);
+        jsfeat.imgproc.gaussian_blur(imgU8, imgU8, kernelSize2, 0);
+
+        return {
+          imageData: imageData,
+          imgU8: imgU8
+        };
+      }
       return {
-        imageData: imageData,
-        imgU8: imgU8
+        getMatrix: getMatrix,
+        grayScale: grayScale,
+        canny: canny
       };
-    }
-
-    function canny(imageData, width, height, imgU8, options) {
-      var r = options.blurRadius | 0;
-      var kernelSize = (r + 1) << 1;
-      var r2 = options.blurRadius2 | 0;
-      var kernelSize2 = (r2 + 1) << 1;
-
-      jsfeat.imgproc.grayscale(imageData.data, width, height, imgU8);
-      jsfeat.imgproc.gaussian_blur(imgU8, imgU8, kernelSize, 0);
-      jsfeat.imgproc.canny(imgU8, imgU8, options.lowThreshold, options.highThreshold);
-      jsfeat.imgproc.gaussian_blur(imgU8, imgU8, kernelSize2, 0);
-
-      return {
-        imageData: imageData,
-        imgU8: imgU8
-      };
-    }
-    return {
-      getMatrix: getMatrix,
-      grayScale: grayScale,
-      canny: canny
     };
-  };
 
-  factory.$inject = ['$log'];
-  return factory;
-});
+    factory.$inject = ['$log'];
+    return factory;
+  });
+})();
 
 define('services/FileReaderService',['angular'], function(angular) {
   
@@ -14369,44 +14423,44 @@ define('services/TreeService',['angular'], function(angular) {
   var factory = function() {
 
     // Some fake testing data
-    var chats = [{
+    var trees = [{
       id: 0,
       name: 'Dub letní',
-      lastText: 'Quercus robur',
-      face: 'img/dub.jpg'
+      nameLatin: 'Quercus robur',
+      image: 'dub.jpg'
     }, {
       id: 1,
       name: 'Javor klen',
-      lastText: 'Acer pseudoplatanus',
-      face: 'img/javor.jpg'
+      nameLatin: 'Acer pseudoplatanus',
+      image: 'img/javor.jpg'
     }, {
       id: 2,
       name: 'Olše lepkavá',
-      lastText: 'Alnus glutinosa',
-      face: 'img/olse.jpg'
+      nameLatin: 'Alnus glutinosa',
+      image: 'img/olse.jpg'
     }, {
       id: 3,
       name: 'Jabloň domácí',
-      lastText: 'Malus domestica',
-      face: 'img/jablon.jpg'
+      nameLatin: 'Malus domestica',
+      image: 'img/jablon.jpg'
     }, {
       id: 4,
       name: 'Buk lesní',
-      lastText: 'Fagus sylvatica',
-      face: 'img/buk.jpg'
+      nameLatin: 'Fagus sylvatica',
+      image: 'img/buk.jpg'
     }];
 
     return {
       all: function() {
-        return chats;
+        return trees;
       },
-      remove: function(chat) {
-        chats.splice(chats.indexOf(chat), 1);
+      remove: function(tree) {
+        trees.splice(trees.indexOf(tree), 1);
       },
-      get: function(chatId) {
-        for (var i = 0; i < chats.length; i++) {
-          if (chats[i].id === parseInt(chatId)) {
-            return chats[i];
+      get: function(treeId) {
+        for (var i = 0; i < trees.length; i++) {
+          if (trees[i].id === parseInt(treeId)) {
+            return trees[i];
           }
         }
         return null;
@@ -14419,24 +14473,26 @@ define('services/TreeService',['angular'], function(angular) {
   return factory;
 });
 
-define('services/services',['require','angular','services/RestAPIService','services/CameraService','services/CanvasService','services/ContoursService','services/CVService','services/JSFeatService','services/FileReaderService','services/TreeService'],function(require) {
+(function() {
   
+  define('services/services',['require','angular','services/RestAPIService','services/CameraService','services/CanvasService','services/ContoursService','services/CVService','services/JSFeatService','services/FileReaderService','services/TreeService'],function(require) {
 
-  var angular = require('angular'),
-    services = angular.module('listy.services', ['restangular']);
+    var angular = require('angular'),
+      services = angular.module('listy.services', ['restangular']);
 
-  services.service('api', require('services/RestAPIService'));
-  services.service('Camera', require('services/CameraService'));
-  services.service('Canvas', require('services/CanvasService'));
-  services.service('Contours', require('services/ContoursService'));
-  services.service('CV', require('services/CVService'));
-  services.service('Feat', require('services/JSFeatService'));
-  services.service('FileReader', require('services/FileReaderService'));
-  services.service('TreeService', require('services/TreeService'));
+    services.service('api', require('services/RestAPIService'));
+    services.service('Camera', require('services/CameraService'));
+    services.service('Canvas', require('services/CanvasService'));
+    services.service('Contours', require('services/ContoursService'));
+    services.service('CV', require('services/CVService'));
+    services.service('Feat', require('services/JSFeatService'));
+    services.service('FileReader', require('services/FileReaderService'));
+    services.service('TreeService', require('services/TreeService'));
 
-  return services;
+    return services;
 
-});
+  });
+})();
 
 /*
  AngularJS v1.4.3
@@ -20101,115 +20157,102 @@ The references are:
 
 define("jsfeat", function(){});
 
-define('app',[
-  'angular',
-  'uiRouter',
-  'controllers',
-  'directives/directives',
-  'services/services',
-  'ionicAngular',
-  'jsfeat'
-], function(
-  angular,
-  uiRouter
-) {
+(function() {
   
-  try {
-    angular.module('html_template');
-  } catch (e) {
-    // for development, if not exist, create empty templates
-    angular.module('html_template', []);
-  }
+  define('app',[
+    'angular',
+    'uiRouter',
+    'controllers/controllers',
+    'directives/directives',
+    'services/services',
+    'ionicAngular',
+    'jsfeat'
+  ], function(
+    angular,
+    uiRouter
+  ) {
+    try {
+      angular.module('html_template');
+    } catch (e) {
+      // for development, if not exist, create empty templates
+      angular.module('html_template', []);
+    }
 
-  // Ionic Starter App
+    angular.module('listy', ['ionic', 'listy.controllers', 'listy.directives', 'listy.services', 'ui.router', 'restangular'])
 
-  // angular.module is a global place for creating, registering and retrieving Angular modules
-  // the 2nd parameter is an array of 'requires'
-  // 'listy.services' is found in services.js
-  // 'listy.controllers' is found in controllers.js
-  angular.module('listy', ['ionic', 'listy.controllers', 'listy.directives', 'listy.services', 'ui.router', 'restangular'])
+    .run(function($ionicPlatform) {
+        $ionicPlatform.ready(function() {
+          // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+          // for form inputs)
+          if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+            cordova.plugins.Keyboard.disableScroll(true);
 
-  .run(function($ionicPlatform) {
-      $ionicPlatform.ready(function() {
-        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-        // for form inputs)
-        if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-          cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-          cordova.plugins.Keyboard.disableScroll(true);
-
-        }
-        if (window.StatusBar) {
-          // org.apache.cordova.statusbar required
-          StatusBar.styleDefault();
-        }
-      });
-    })
-    .constant('API', {
-      url: 'http://localhost:3000/api'
-    })
-
-  .config(function($stateProvider, $urlRouterProvider) {
-
-    // Ionic uses AngularUI Router which uses the concept of states
-    // Learn more here: https://github.com/angular-ui/ui-router
-    // Set up the various states which the app can be in.
-    // Each state's controller can be found in controllers.js
-    $stateProvider
-
-    // setup an abstract state for the tabs directive
-      .state('tab', {
-      url: '/tab',
-      abstract: true,
-      templateUrl: 'templates/tabs.html'
-    })
-
-    // Each tab has its own nav history stack:
-
-    .state('tab.dash', {
-      url: '/dash',
-      views: {
-        'tab-dash': {
-          templateUrl: 'templates/tab-dash.html',
-          controller: 'DashCtrl'
-        }
-      }
-    })
-
-    .state('tab.chats', {
-        url: '/chats',
-        views: {
-          'tab-chats': {
-            templateUrl: 'templates/tab-chats.html',
-            controller: 'ChatsCtrl'
           }
-        }
+          if (window.StatusBar) {
+            // org.apache.cordova.statusbar required
+            StatusBar.styleDefault();
+          }
+        });
       })
-      .state('tab.chat-detail', {
-        url: '/chats/:chatId',
+      .constant('API', {
+        url: 'http://localhost:3000/api/',
+        images: 'http://localhost:3000/images/'
+      })
+
+    .config(function($stateProvider, $urlRouterProvider) {
+
+      // Ionic uses AngularUI Router which uses the concept of states
+      // Learn more here: https://github.com/angular-ui/ui-router
+      // Set up the various states which the app can be in.
+      // Each state's controller can be found in controllers.js
+      $stateProvider
+
+      // setup an abstract state for the tabs directive
+        .state('tab', {
+        url: '/tab',
+        abstract: true,
+        templateUrl: 'templates/tabs.html'
+      })
+
+      // Each tab has its own nav history stack:
+
+      .state('tab.recognize', {
+        url: '/recognize',
         views: {
-          'tab-chats': {
-            templateUrl: 'templates/chat-detail.html',
-            controller: 'ChatDetailCtrl'
+          'tab-recognize': {
+            templateUrl: 'templates/recognize.html',
+            controller: 'recognizeCtrl as vm'
           }
         }
       })
 
-    .state('tab.account', {
-      url: '/account',
-      views: {
-        'tab-account': {
-          templateUrl: 'templates/tab-account.html',
-          controller: 'AccountCtrl'
-        }
-      }
+      .state('tab.trees', {
+          url: '/trees',
+          views: {
+            'tab-trees': {
+              templateUrl: 'templates/trees.html',
+              controller: 'treesCtrl as vm'
+            }
+          }
+        })
+        .state('tab.treeDetail', {
+          url: '/trees/:treeId',
+          views: {
+            'tab-trees': {
+              templateUrl: 'templates/treeDetail.html',
+              controller: 'treeDetailCtrl as vm'
+            }
+          }
+        });
+
+      // if none of the above states are matched, use this as the fallback
+      $urlRouterProvider.otherwise('/tab/recognize');
+
     });
 
-    // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/tab/dash');
-
   });
-
-});
+})();
 
 ;(function () {
 	

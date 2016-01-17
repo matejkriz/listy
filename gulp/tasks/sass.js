@@ -1,5 +1,4 @@
 var gulp         = require('gulp');
-var browserSync  = require('browser-sync');
 var sass         = require('gulp-sass');
 var sourcemaps   = require('gulp-sourcemaps');
 var handleErrors = require('../util/handleErrors');
@@ -13,6 +12,5 @@ gulp.task('sass', function () {
     .on('error', handleErrors)
     .pipe(autoprefixer())
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest(config.dest))
-    .pipe(browserSync.reload({stream:true}));
+    .pipe(gulp.dest(config.dest));
 });

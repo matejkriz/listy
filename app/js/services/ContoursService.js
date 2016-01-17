@@ -1,4 +1,5 @@
 /*
+ * https://github.com/Doodle3D/Contour-finding-experiment
  * sources (re-implement basic finder and then add iterative functionality?):
  * - https://github.com/Dkendal/Moore-Neighbor_Contour_Tracer/blob/master/ContourTrace.cs
  * - http://www.imageprocessingplace.com/downloads_V3/root_downloads/tutorials/contour_tracing_Abeer_George_Ghuneim/moore.html
