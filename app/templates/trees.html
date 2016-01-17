@@ -1,0 +1,16 @@
+<ion-view view-title="Databáze">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="tree in vm.trees" type="item-text-wrap" href="#/tab/trees/{{tree.id}}">
+        <img ng-src="{{tree.image}}">
+        <h2>{{tree.name}}</h2>
+        <p>{{tree.nameLatin}}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+
+        <ion-option-button class="button-assertive" ng-click="vm.remove(tree)">
+          Delete
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
