@@ -5,6 +5,7 @@ requirejs.config({
     angularGettext: '../../node_modules/angular-gettext/dist/angular-gettext.min',
     angularSanitize: '../lib/ionic/js/angular/angular-sanitize.min',
     fastclick: '../lib/fastclick/lib/fastclick',
+    Hammer: '../lib/hammerjs/hammer.min',
     uiRouter: '../lib/ionic/js/angular-ui/angular-ui-router.min',
     ionic: '../lib/ionic/js/ionic.min',
     ionicAngular: '../lib/ionic/js/ionic-angular.min',
@@ -13,7 +14,7 @@ requirejs.config({
     restangular: '../../node_modules/restangular/dist/restangular.min',
     text: '../lib/ionic/js/text',
     'tmh.dynamicLocale': '../../node_modules/angular-dynamic-locale/dist/tmhDynamicLocale.min',
-    jsfeat: '../lib/jsfeat/build/jsfeat' // TODO: switch to minified version
+    jsfeat: '../lib/jsfeat/build/jsfeat-min'
   },
   shim: {
     jquery: {

@@ -8,6 +8,6 @@
       vm.remove = function(tree) {
         TreeService.remove(tree);
       };
-    }]
+    }];
   });
 })();

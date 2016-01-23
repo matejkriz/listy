@@ -1,7 +1,7 @@
 (function() {
   'use strict';
-  define([], function() {
-    return ['$scope', 'Camera', 'Canvas', 'api', 'Feat', 'FileReader', 'Contours', 'CV', '$window', function($scope, Camera, Canvas, api, Feat, FileReader, Contours, CV, $window) {
+  define(['Hammer'], function(Hammer) {
+    return ['$scope', 'Camera', 'Canvas', 'api', 'Feat', 'FileReader', 'Contours', 'ImageEdit', '$timeout', '$window', function($scope, Camera, Canvas, api, Feat, FileReader, Contours, ImageEdit, $timeout, $window) {
       var vm = this;
 
       vm.padding = 15;
@@ -13,7 +13,7 @@
       };
 
       vm.options = {
-        blurRadius: 8,
+        blurRadius: 5,
         blurRadius2: 2,
         from: 0,
         to: 1,
@@ -22,6 +22,7 @@
         treshold: 10
       };
 
+      var img;
       var cannyCtx;
       var previewCtx;
       var height;
@@ -42,7 +43,7 @@
             // console.log("result = ", result);
             drawImages(result, 'previewCanvas');
           });
-      };
+      }
 
       function takePicture() {
         // console.log('takePicture!');
@@ -51,15 +52,16 @@
             // console.log('neco = ', neco);
           }, 0);
         });
-      };
+      }
 
       function drawImages(image, canvasID) {
         previewCtx = Canvas.getContext(canvasID);
         Canvas.canvasClear(previewCtx);
 
-        var img = new Image();
+        img = new Image();
 
         img.onload = function() {
+
           width = vm.canvas.width;
           vm.canvas.height = Math.floor(vm.canvas.width * (img.height / img.width));
           height = vm.canvas.height;
@@ -68,6 +70,7 @@
             cannyCtx.canvas.height = height;
             Canvas.canvasClear(cannyCtx);
           }
+          ImageEdit.init(previewCtx, img, width, height);
 
           previewCtx.drawImage(img, 0, 0, width, height);
 
@@ -124,8 +127,8 @@
 
         var centerPoint = Canvas.getCenter(vm.contours[0]);
         Canvas.drawPoint(cannyCtx, centerPoint);
-        var path = Canvas.getPath(vm.contours[0], centerPoint)
-        Canvas.canvasClear(pathCtx)
+        var path = Canvas.getPath(vm.contours[0], centerPoint);
+        Canvas.canvasClear(pathCtx);
         Canvas.drawPath(pathCtx, path, 'blue', 1, vm.options.pathLength, vm.options.pathHeight, true);
 
         //console.log("path = ", path);
@@ -148,8 +151,8 @@
         for (var i = vm.options.from; i < vm.options.to; i++) {
           Canvas.drawPath(cannyCtx, vm.contours[i], 'green', 3);
         }
-      };
+      }
 
-    }]
+    }];
   });
 })();
