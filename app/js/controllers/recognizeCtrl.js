@@ -32,6 +32,7 @@
       vm.getFile = getFile;
       vm.reprocessCanny = reprocessCanny;
       vm.takePicture = takePicture;
+      vm.toggleEdit = toggleEdit;
 
       // TODO: remove this for production
       drawImages('img/test.jpg', 'previewCanvas');
@@ -66,7 +67,7 @@
           vm.canvas.height = Math.floor(vm.canvas.width * (img.height / img.width));
           height = vm.canvas.height;
           previewCtx.canvas.height = height;
-          if (!!cannyCtx) {
+          if (cannyCtx) {
             cannyCtx.canvas.height = height;
             Canvas.canvasClear(cannyCtx);
           }
@@ -107,9 +108,10 @@
         return imgResult;
       }
       var timeout;
+
       function reprocessCanny(delay) {
         $timeout.cancel(timeout);
-        timeout = $timeout(function(){
+        timeout = $timeout(function() {
           console.log("reprocessCanny");
           // FIXME: new image disappearing after reprocess
           var imageData = previewCtx.getImageData(0, 0, width, height);
@@ -156,6 +158,17 @@
         for (var i = vm.options.from; i < vm.options.to; i++) {
           Canvas.drawPath(cannyCtx, vm.contours[i], 'green', 3);
         }
+      }
+
+      var enableEdit = false;
+
+      function toggleEdit() {
+        if (!enableEdit) {
+          ImageEdit.turnOn();
+        } else {
+          ImageEdit.turnOff();
+        }
+        enableEdit = !enableEdit;
       }
 
     }];
