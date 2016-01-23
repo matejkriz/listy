@@ -1,20 +1,16 @@
-var debug = require('debug')('server:server');
+var debug = require('debug')('api:trees');
 var Tree = require('../models/Tree');
+var util = require('util');
 
 
 exports.addTree = addTree;
 
-function addTree(imagesDir) {
-  return function(req, res, next) {
-    var tree = req;
-    debug('tree: ' + tree);
-    // Tree.create({
-    //   tree: String,
-    // 	link: String,
-    // 	imgLink: String,
-    //   descriptors: [Number]
-    // }, function(err) {
-    //   if (err) return next(err);
-    // });
-  }
+function addTree(req, res, next) {
+  //TODO: add validation of input
+  var tree = new Tree(req.body);
+  debug(util.inspect(tree));
+  Tree.save(function(err, tree) {
+    if (err) return next(err);
+    res.send('Tree ' + tree.tree + ' was saved with ID: ', tree._id);
+  });
 };

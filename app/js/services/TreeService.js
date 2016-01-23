@@ -1,7 +1,8 @@
 define(['angular'], function(angular) {
   "use strict";
 
-  var factory = function() {
+  var factory = function(api) {
+    var Trees = api.all('trees');
 
     // Some fake testing data
     var trees = [{
@@ -31,6 +32,13 @@ define(['angular'], function(angular) {
       image: 'buk.jpg'
     }];
 
+    function addTree(){
+      Trees.post(trees[0]).then(function(res){
+        console.log("response = ", res);
+      });
+    }
+
+
     return {
       all: function() {
         return trees;
@@ -45,11 +53,12 @@ define(['angular'], function(angular) {
           }
         }
         return null;
-      }
+      },
+      add: addTree
     };
 
   };
 
-  factory.$inject = [];
+  factory.$inject = ['api'];
   return factory;
 });
