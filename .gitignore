@@ -3,3 +3,5 @@
 
 platforms/
 app/css
+www/
+!plugins/**/www/
