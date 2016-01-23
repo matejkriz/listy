@@ -74,7 +74,7 @@
 
           previewCtx.drawImage(img, 0, 0, width, height);
 
-          reprocessCanny();
+          reprocessCanny(0);
         };
         img.src = image;
       }
@@ -106,12 +106,17 @@
         Canvas.renderImageData(imgResult.imageData, imgResult.imgU8, cannyCtx);
         return imgResult;
       }
+      var timeout;
+      function reprocessCanny(delay) {
+        $timeout.cancel(timeout);
+        timeout = $timeout(function(){
+          console.log("reprocessCanny");
+          // FIXME: new image disappearing after reprocess
+          var imageData = previewCtx.getImageData(0, 0, width, height);
+          var canny = drawCanny(imageData, width, height, 'cannyCanvas');
+          drawContours(canny);
+        }, delay || 500);
 
-      function reprocessCanny() {
-        // FIXME: new image disappearing after reprocess
-        var imageData = previewCtx.getImageData(0, 0, width, height);
-        var canny = drawCanny(imageData, width, height, 'cannyCanvas');
-        drawContours(canny);
       }
 
       function drawContours(canny) {
