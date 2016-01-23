@@ -37,7 +37,7 @@
         </label>
       </div> -->
     </div>
-    <canvas id="previewCanvas" width="{{ vm.canvas.width }}" height="{{ vm.canvas.height }}"></canvas>
+    <canvas id="previewCanvas" width="{{ vm.canvas.width }}" height="{{ vm.canvas.height }}" on-double-tap="vm.toggleEdit()"></canvas>
     <canvas id="cannyCanvas" width="{{ vm.canvas.width }}" height="{{ vm.canvas.height }}"></canvas>
   </ion-content>
 </ion-view>
