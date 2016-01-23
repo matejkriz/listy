@@ -24,7 +24,7 @@ var Tree = new db.Schema({
 });
 
 if (process.env.NODE_ENV === 'development') {
-    schema.set('autoIndex', false);
+    Tree.set('autoIndex', false);
 }
 
 module.exports = db.model('Tree', Tree);
