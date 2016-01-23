@@ -1,13 +1,13 @@
 var cv = require('opencv');
-var debug = require('debug')('server:server');
+var debug = require('debug')('api:images');
 var fs = require('fs');
 var path = require('path');
 var imagesPath = path.join(__dirname, '../public/images/');
 var Image = require('../models/Image');
 
 
-exports.uploadImage = uploadImage; 
-exports.testOpenCV = testOpenCV; 
+exports.uploadImage = uploadImage;
+exports.testOpenCV = testOpenCV;
 
 var lowThresh = 0;
 var highThresh = 100;
