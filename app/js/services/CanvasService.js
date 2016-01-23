@@ -77,8 +77,8 @@
             y: getDistance(points[i], center)
           };
         }
-        for (var i = 0; i < points.length; i++) {
-          path[i].y = (path[i].y / maxDist);
+        for (var j = 0; j < points.length; j++) {
+          path[j].y = (path[j].y / maxDist);
         }
         return path;
       }

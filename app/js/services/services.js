@@ -12,6 +12,7 @@
     services.service('CV', require('services/CVService'));
     services.service('Feat', require('services/JSFeatService'));
     services.service('FileReader', require('services/FileReaderService'));
+    services.service('ImageEdit', require('services/ImageEditService'));
     services.service('TreeService', require('services/TreeService'));
 
     return services;
