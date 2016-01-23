@@ -4,7 +4,6 @@ var db = require('./Database');
  * Create a Schema to hold tree information.
  */
 var Descriptor = new db.Schema({
-  _id: String,
   note: String,
   descriptor: [Number]
 });
@@ -13,7 +12,6 @@ var Descriptor = new db.Schema({
  * Create a Schema to hold tree information.
  */
 var Tree = new db.Schema({
-  _id: String,
   tree: {
     type: String,
     index: true
