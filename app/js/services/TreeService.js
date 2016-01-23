@@ -13,22 +13,22 @@ define(['angular'], function(angular) {
       id: 1,
       name: 'Javor klen',
       nameLatin: 'Acer pseudoplatanus',
-      image: 'img/javor.jpg'
+      image: 'javor.jpg'
     }, {
       id: 2,
       name: 'Olše lepkavá',
       nameLatin: 'Alnus glutinosa',
-      image: 'img/olse.jpg'
+      image: 'olse.jpg'
     }, {
       id: 3,
       name: 'Jabloň domácí',
       nameLatin: 'Malus domestica',
-      image: 'img/jablon.jpg'
+      image: 'jablon.jpg'
     }, {
       id: 4,
       name: 'Buk lesní',
       nameLatin: 'Fagus sylvatica',
-      image: 'img/buk.jpg'
+      image: 'buk.jpg'
     }];
 
     return {

@@ -5,6 +5,10 @@ var path = require('path');
 var imagesPath = path.join(__dirname, '../public/images/');
 var Image = require('../models/Image');
 
+
+exports.uploadImage = uploadImage; 
+exports.testOpenCV = testOpenCV; 
+
 var lowThresh = 0;
 var highThresh = 100;
 var nIters = 2;
@@ -34,7 +38,7 @@ function saveImage(targetPath) {
 }
 
 
-exports.uploadImage = function(imagesDir) {
+function uploadImage(imagesDir) {
   return function(req, res, next) {
     var img = req.files.photo.image;
     var targetPath = getTargetPath(img, imagesDir);
@@ -43,7 +47,7 @@ exports.uploadImage = function(imagesDir) {
   }
 };
 
-exports.testOpenCV = function(req, res) {
+function testOpenCV(req, res) {
   cv.readImage(imagesPath + 'stuff.png', function(err, im) {
     if (err) throw err;
     var width = im.width();
