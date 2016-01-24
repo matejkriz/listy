@@ -1,50 +1,83 @@
 <ion-view view-title="Rozpoznání listu">
+  <ion-nav-buttons side="primary">
+    <button class="button button-clear icon ion-ios-search-strong button-balanced" ng-click="vm.findTree()"></button>
+  </ion-nav-buttons>
   <ion-nav-buttons side="secondary">
-      <button class="button button-clear icon ion-ios-plus-outline button-balanced" ng-click="vm.showForm()">
-      </button>
-    </ion-nav-buttons>
+    <button class="button button-clear icon ion-ios-plus-outline button-balanced" ng-click="vm.showForm()"></button>
+  </ion-nav-buttons>
   <ion-content class="padding">
     <!-- TODO: enable to take photo -->
-    <div class="file-upload button icon-left ion-camera button-block button-balanced" ng-click="vm.takePicture()">
+    <div class="file-upload button icon-left ion-camera button-block button-stable" ng-click="vm.takePicture()">
       <input type="file" class="file-upload__input" ng-file-select>
-      <span>Pořídit fotku</span>
+      <span>Získat foto listu</span>
     </div>
-    <canvas id="pathCanvas" width="{{ vm.options.pathLength }}" height="{{ vm.options.pathHeight }}"></canvas>
-    <div class="list">
-      <div class="item range range-balanced">
-        <input type="range" ng-model="vm.options.blurRadius" ng-change="vm.reprocessCanny()" name="volume" min="0" max="20">
-        <span class="item-note">
-          blur před canny: {{vm.options.blurRadius}}
-        </span>
-      </div>
-      <div class="item range range-balanced">
-        <input type="range" ng-model="vm.options.blurRadius2" ng-change="vm.reprocessCanny()" name="volume" min="0" max="30">
-        <span class="item-note">
-          blur po canny: {{vm.options.blurRadius2}}
-        </span>
-      </div>
-      <div class="item range range-balanced">
-        <input type="range" ng-model="vm.options.treshold" ng-change="vm.reprocessCanny()" name="volume" min="0" max="50">
-        <span class="item-note">
-          mez: {{vm.options.treshold}}
-        </span>
-      </div>
-      <!-- <div class="item">
-        Contours.length: {{vm.contours.length}}
-      </div>
-      <div class="list list-inset">
-        <label class="item item-input">
-          <input type="number" placeholder="From" ng-model="vm.options.from" ng-change="vm.drawContoursPaths()">
-        </label>
-        <label class="item item-input">
-          <input type="number" placeholder="To" ng-model="vm.options.to" ng-change="vm.drawContoursPaths()">
-        </label>
-      </div> -->
-    </div>
+
     <canvas id="previewCanvas" width="{{ vm.canvas.width }}" height="{{ vm.canvas.height }}" on-double-tap="vm.toggleEdit()"></canvas>
     <canvas id="cannyCanvas" width="{{ vm.canvas.width }}" height="{{ vm.canvas.height }}"></canvas>
-    <div>
-      <button class="button icon ion-paintbrush" ng-class="vm.enableEraser? 'button-energized':'button-stable'" ng-click="vm.toggleEraser()"></button>
+
+    <div class="row">
+      <div class="col col-50">
+        <button class="button icon ion-paintbrush" ng-class="vm.enableEraser? 'button-energized':'button-stable'" ng-click="vm.toggleEraser()">
+          mazání
+        </button>
+      </div>
+      <div class="col col-50">
+        <div class="list">
+          <div class="item item-divider">
+            blur před canny:
+            {{vm.options.blurRadius}}
+            <i class="icon ion-arrow-down-b"></i>
+          </div>
+          <div class="item range range-balanced">
+
+            <input type="range" ng-model="vm.options.blurRadius" ng-change="vm.reprocessCanny()" name="volume" min="0" max="20">
+          </div>
+          <div class="item item-divider">
+            blur po canny:
+            {{vm.options.blurRadius2}}
+            <i class="icon ion-arrow-down-b"></i>
+          </div>
+          <div class="item range range-balanced">
+
+            <input type="range" ng-model="vm.options.blurRadius2" ng-change="vm.reprocessCanny()" name="volume" min="0" max="30">
+          </div>
+          <div class="item item-divider">
+            mez:
+            {{vm.options.treshold}}
+            <i class="icon ion-arrow-down-b"></i>
+          </div>
+          <div class="item range range-balanced">
+
+            <input type="range" ng-model="vm.options.treshold" ng-change="vm.reprocessCanny()" name="volume" min="0" max="50">
+          </div>
+          <!-- <div class="item">
+            Contours.length: {{vm.contours.length}}
+          </div>
+          <div class="list list-inset">
+            <label class="item item-input">
+              <input type="number" placeholder="From" ng-model="vm.options.from" ng-change="vm.drawContoursPaths()">
+            </label>
+            <label class="item item-input">
+              <input type="number" placeholder="To" ng-model="vm.options.to" ng-change="vm.drawContoursPaths()">
+            </label>
+          </div> -->
+        </div>
+      </div>
     </div>
+
+    <div class="card">
+      <div class="item item-divider">
+        Tvar listu
+        <i class="icon ion-arrow-down-b"></i>
+      </div>
+      <div class="item">
+        <canvas id="pathCanvas" width="{{ vm.options.pathLength }}" height="{{ vm.options.pathHeight }}"></canvas>
+      </div>
+    </div>
+
+    <div class="button icon-left ion-ios-search-strong button-block button-balanced" ng-click="vm.findTree()">
+      <span>Hledat strom</span>
+    </div>
+
   </ion-content>
 </ion-view>
