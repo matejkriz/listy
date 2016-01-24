@@ -69,6 +69,7 @@
 
         vm.canSave = canSave;
         vm.drawContourPath = drawContourPath;
+        vm.findTree = findTree;
         vm.getFile = getFile;
         vm.reprocessCanny = reprocessCanny;
         vm.saveTree = saveTree;
@@ -85,19 +86,25 @@
           return vm.hasContours;
         }
 
+        function findTree() {
+          vm.tree.descriptors = [{
+            note: '',
+            descriptor: descriptor
+          }];
+          TreeService.find(vm.tree)
+            .then(function(res) {
+              console.log("res = ", res);
+            })
+            .catch(function(err) {
+              showError(err);
+            });
+        }
+
         function getFile(file) {
           FileReader.readAsDataUrl(file, $scope)
             .then(function(resultFile) {
               drawImages(resultFile, 'previewCanvas');
             });
-        }
-
-        function takePicture() {
-          Camera.takePicture().then(function(picture) {
-            setTimeout(function() {
-              drawImages(picture, 'previewCanvas');
-            }, 0);
-          });
         }
 
         function drawImages(image, canvasID) {
@@ -242,6 +249,14 @@
           Canvas.setErasing(vm.enableEraser);
           // TODO: enable to not save changes
           imgData = previewCtx.getImageData(0, 0, width, height);
+        }
+
+        function takePicture() {
+          Camera.takePicture().then(function(picture) {
+            setTimeout(function() {
+              drawImages(picture, 'previewCanvas');
+            }, 0);
+          });
         }
 
         $ionicModal.fromTemplateUrl('templates/addTreeForm.html', {

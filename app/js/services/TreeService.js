@@ -38,6 +38,11 @@ define(['angular'], function(angular) {
       });
     }
 
+    function findTree(tree) {
+      return Trees.all('dtw')
+        .post(tree.descriptors[0].descriptor);
+    }
+
     var descriptorLengh = 3000;
 
     function getDescriptor(path) {
@@ -69,7 +74,7 @@ define(['angular'], function(angular) {
         }
         sum += path[j].y;
         count++;
-        if(path.length - 1 < Math.round(to)) {
+        if (path.length - 1 < Math.round(to)) {
           break;
         }
       }
@@ -79,12 +84,11 @@ define(['angular'], function(angular) {
 
 
     return {
+      add: addTree,
       all: function() {
         return trees;
       },
-      remove: function(tree) {
-        trees.splice(trees.indexOf(tree), 1);
-      },
+      find: findTree,
       get: function(treeId) {
         for (var i = 0; i < trees.length; i++) {
           if (trees[i].id === parseInt(treeId)) {
@@ -93,9 +97,10 @@ define(['angular'], function(angular) {
         }
         return null;
       },
-      add: addTree,
-      getDescriptor: getDescriptor
-
+      getDescriptor: getDescriptor,
+      remove: function(tree) {
+        trees.splice(trees.indexOf(tree), 1);
+      }
     };
 
   };
