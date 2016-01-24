@@ -6,11 +6,11 @@ var util = require('util');
 exports.addTree = addTree;
 
 function addTree(req, res, next) {
+  debug(util.inspect(req.body));
   //TODO: add validation of input
-  var tree = new Tree(req.body);
-  debug(util.inspect(tree));
-  Tree.save(function(err, tree) {
+
+  Tree.create(req.body, function(err, tree) {
     if (err) return next(err);
-    res.send('Tree ' + tree.tree + ' was saved with ID: ', tree._id);
+    res.send('Tree ' + tree.tree + ' was saved with ID: ' + tree._id);
   });
 };

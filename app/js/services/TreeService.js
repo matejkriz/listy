@@ -32,10 +32,49 @@ define(['angular'], function(angular) {
       image: 'buk.jpg'
     }];
 
-    function addTree(){
-      Trees.post(trees[0]).then(function(res){
+    function addTree(tree) {
+      return Trees.post(tree).then(function(res) {
         console.log("response = ", res);
       });
+    }
+
+    var descriptorLengh = 3000;
+
+    function getDescriptor(path) {
+      var descriptor = [];
+      var index = path.length / descriptorLengh;
+      var ratio = Math.max(2, index);
+      var offset = Math.ceil(ratio / 2);
+      for (var i = 0; i < descriptorLengh; i++) {
+        descriptor[i] = getAverage(
+          i * index - offset,
+          i * index + offset,
+          path
+        )
+      }
+      return descriptor;
+    }
+
+    var sum, count;
+
+    function getAverage(from, to, path) {
+      sum = 0;
+      count = 0;
+      for (var j = Math.round(from); j < Math.round(to); j++) {
+        if (j < 0) {
+          j = 0;
+        }
+        if (j > path.length - 1) {
+          j = path.length - 1;
+        }
+        sum += path[j].y;
+        count++;
+        if(path.length - 1 < Math.round(to)) {
+          break;
+        }
+      }
+
+      return sum / count;
     }
 
 
@@ -54,7 +93,9 @@ define(['angular'], function(angular) {
         }
         return null;
       },
-      add: addTree
+      add: addTree,
+      getDescriptor: getDescriptor
+
     };
 
   };

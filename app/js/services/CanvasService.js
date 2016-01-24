@@ -6,12 +6,14 @@
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       }
 
-      function drawPath(ctx, path, color, lineWidth, length, height, isFunction) {
+      function drawPath(ctx, path, color, lineWidth, length, height, isFunction, isDescriptor) {
+
         if (path && path.length) {
           ctx.beginPath();
           if (isFunction) {
             ctx.moveTo(path[0].x, height * (1 - path[0].y));
           } else {
+            ctx.arc(path[0].x, path[0].y, 5, 0, 2 * Math.PI);
             ctx.moveTo(path[0].x, path[0].y);
           }
           var step = length ? (path.length / length) : 1;
@@ -21,8 +23,13 @@
           for (var i = 1; i < path.length; i++) {
             if (isFunction) {
               ctx.lineTo(path[i].x / step, height * (1 - path[i].y));
+            } else if (isDescriptor) {
+              ctx.lineTo(i / step, height * (1 - path[i]));
             } else {
               ctx.lineTo(path[i].x / step, path[i].y);
+              if(i === path.length - 1) {
+                ctx.arc(path[i].x / step, path[i].y, 2, 0, 2 * Math.PI);
+              }
             }
           }
           ctx.lineWidth = lineWidth || 3;
