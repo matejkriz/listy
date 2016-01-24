@@ -45,7 +45,7 @@
           blurRadius2: 2,
           from: 0,
           to: 1,
-          pathLength: Math.floor(vm.windowWidth - vm.padding),
+          pathLength: Math.floor(vm.windowWidth - 3 * vm.padding),
           pathHeight: Math.floor(vm.windowWidth / 1.618),
           treshold: 10
         };
@@ -87,17 +87,15 @@
 
         function getFile(file) {
           FileReader.readAsDataUrl(file, $scope)
-            .then(function(result) {
-              // console.log("result = ", result);
-              drawImages(result, 'previewCanvas');
+            .then(function(resultFile) {
+              drawImages(resultFile, 'previewCanvas');
             });
         }
 
         function takePicture() {
-          // console.log('takePicture!');
-          Camera.takePicture().then(function(neco) {
+          Camera.takePicture().then(function(picture) {
             setTimeout(function() {
-              // console.log('neco = ', neco);
+              drawImages(picture, 'previewCanvas');
             }, 0);
           });
         }
@@ -181,30 +179,30 @@
           // console.log("contours = ", contours);
           vm.contours = Contours.findContours(cannyCanvas, 255, 0, 125);
           vm.contour = getLongest(vm.contours);
-          vm.contour = Contours.startBottom(vm.contour);
 
           vm.hasContours = vm.contour && vm.contour.length > 0;
 
-          var centerPoint = Canvas.getCenter(vm.contour);
-          Canvas.drawPoint(cannyCtx, centerPoint);
-          path = Canvas.getPath(vm.contour, centerPoint);
-          Canvas.canvasClear(pathCtx);
-          Canvas.drawPath(
-            pathCtx,
-            path,
-            'blue',
-            1,
-            vm.options.pathLength,
-            vm.options.pathHeight,
-            true
-          );
+          if (vm.hasContours) {
+            vm.contour = Contours.startBottom(vm.contour);
 
-          descriptor = TreeService.getDescriptor(path);
+            var centerPoint = Canvas.getCenter(vm.contour);
+            Canvas.drawPoint(cannyCtx, centerPoint);
+            path = Canvas.getPath(vm.contour, centerPoint);
+            Canvas.canvasClear(pathCtx);
+            Canvas.drawPath(
+              pathCtx,
+              path,
+              'blue',
+              1,
+              vm.options.pathLength,
+              vm.options.pathHeight,
+              true
+            );
 
-          //console.log("path = ", path);
-          // console.log("centerPoint = ", centerPoint);
-          // console.log("vm.contour = ", vm.contour);
-          drawContourPath();
+            descriptor = TreeService.getDescriptor(path);
+
+            drawContourPath();
+          }
         }
 
         function drawContourPath() {
@@ -221,7 +219,6 @@
           if (vm.options.from < 0) {
             vm.options.from = 0;
           }
-          //cannyCtx.drawImage(canny.imageData, 0, 0);
           for (var i = vm.options.from; i < vm.options.to; i++) {
             Canvas.drawPath(cannyCtx, vm.contours[i], 'green', 3);
           }
