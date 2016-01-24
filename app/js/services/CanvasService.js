@@ -1,13 +1,13 @@
 (function() {
   'use strict';
   define([], function() {
-    var factory = function($log) {
+    var factory = function($log, $ionicScrollDelegate) {
       function canvasClear(ctx) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       }
 
       function drawGuideline(ctx, width, height, lineWidth, color) {
-        var middle = Math.round(width/2);
+        var middle = Math.round(width / 2);
         ctx.beginPath();
         ctx.moveTo(middle, 0);
         ctx.lineTo(middle, height);
@@ -37,7 +37,7 @@
               ctx.lineTo(i / step, height * (1 - path[i]));
             } else {
               ctx.lineTo(path[i].x / step, path[i].y);
-              if(i === path.length - 1) {
+              if (i === path.length - 1) {
                 ctx.arc(path[i].x / step, path[i].y, 2, 0, 2 * Math.PI);
               }
             }
@@ -100,8 +100,12 @@
         return path;
       }
 
+      function getCanvas(canvasID) {
+        return document.getElementById(canvasID);
+      }
+
       function getContext(canvasID) {
-        var canvas = document.getElementById(canvasID);
+        var canvas = getCanvas(canvasID);
         return canvas.getContext('2d');
       }
 
@@ -119,6 +123,46 @@
         ctx.putImageData(imageData, 0, 0);
       }
 
+      function initEraser(canvasID) {
+        var canvas = {};
+        canvas.node = getCanvas(canvasID);
+        canvas.context = canvas.node.getContext('2d');
+        var ctx = canvas.context;
+        ctx.fillCircle = function(x, y, radius, fillColor) {
+          this.fillStyle = fillColor;
+          this.beginPath();
+          this.moveTo(x, y);
+          this.arc(x, y, radius, 0, Math.PI * 2, false);
+          this.fill();
+        };
+
+        // bind mouse events
+        canvas.node.onmousemove = function(e) {
+          e.stopPropagation();
+          if (!canvas.isDrawing) {
+            return;
+          }
+          var headerHeight = 51;
+          var scrollOffset = $ionicScrollDelegate.getScrollPosition().top - headerHeight;
+          var x = e.pageX - this.offsetLeft;
+          var y = e.pageY - this.offsetTop + scrollOffset;
+          var radius = 6; // or whatever
+          var fillColor = '#fff';
+          ctx.fillCircle(x, y, radius, fillColor);
+        };
+        canvas.node.onmousedown = function(e) {
+          canvas.isDrawing = isErasing;
+        };
+        canvas.node.onmouseup = function(e) {
+          canvas.isDrawing = false;
+        };
+      }
+      var isErasing = false;
+
+      function setErasing(value) {
+        isErasing = value;
+      }
+
       return {
         canvasClear: canvasClear,
         drawGuideline: drawGuideline,
@@ -127,11 +171,13 @@
         getContext: getContext,
         getPath: getPath,
         drawPoint: drawPoint,
+        initEraser: initEraser,
+        setErasing: setErasing,
         renderImageData: renderImageData
       };
     };
 
-    factory.$inject = ['$log'];
+    factory.$inject = ['$log', '$ionicScrollDelegate'];
     return factory;
   });
 })();

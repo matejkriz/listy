@@ -59,6 +59,7 @@
         };
 
         var img;
+        var imgData;
         var cannyCtx;
         var descriptor;
         var path;
@@ -75,11 +76,10 @@
         vm.hideForm = hideForm;
         vm.takePicture = takePicture;
         vm.toggleEdit = toggleEdit;
+        vm.toggleEraser = toggleEraser;
 
         // TODO: remove this for production
         drawImages('img/test.jpg', 'previewCanvas');
-
-
 
         function canSave() {
           return vm.hasContours;
@@ -119,8 +119,11 @@
               Canvas.canvasClear(cannyCtx);
             }
             ImageEdit.init(previewCtx, img, width, height);
+            Canvas.initEraser(canvasID);
+
 
             previewCtx.drawImage(img, 0, 0, width, height);
+            imgData = previewCtx.getImageData(0, 0, width, height);
 
             reprocessCanny(0);
           };
@@ -161,7 +164,7 @@
           vm.hasContours = false;
           $timeout.cancel(timeout);
           timeout = $timeout(function() {
-            previewCtx.drawImage(img, 0, 0, width, height);
+            previewCtx.putImageData(imgData, 0, 0);
             var imageData = previewCtx.getImageData(0, 0, width, height);
             var canny = drawCanny(imageData, width, height, 'cannyCanvas');
             drawContours(canny);
@@ -233,6 +236,15 @@
             ImageEdit.turnOff();
           }
           enableEdit = !enableEdit;
+        }
+
+        vm.enableEraser = false;
+
+        function toggleEraser() {
+          vm.enableEraser = !vm.enableEraser;
+          Canvas.setErasing(vm.enableEraser);
+          // TODO: enable to not save changes
+          imgData = previewCtx.getImageData(0, 0, width, height);
         }
 
         $ionicModal.fromTemplateUrl('templates/addTreeForm.html', {
