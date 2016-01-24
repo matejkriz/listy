@@ -6,6 +6,16 @@
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       }
 
+      function drawGuideline(ctx, width, height, lineWidth, color) {
+        var middle = Math.round(width/2);
+        ctx.beginPath();
+        ctx.moveTo(middle, 0);
+        ctx.lineTo(middle, height);
+        ctx.lineWidth = lineWidth || 2;
+        ctx.strokeStyle = color || 'grey';
+        ctx.stroke();
+      }
+
       function drawPath(ctx, path, color, lineWidth, length, height, isFunction, isDescriptor) {
 
         if (path && path.length) {
@@ -111,6 +121,7 @@
 
       return {
         canvasClear: canvasClear,
+        drawGuideline: drawGuideline,
         drawPath: drawPath,
         getCenter: getCenter,
         getContext: getContext,
