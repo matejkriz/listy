@@ -1,0 +1,41 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <div class="buttons">
+      <button class="button icon-left button-clear ion-ios-close-empty" ng-click="vm.hideForm()">Zavřít</button>
+    </div>
+    <h1 class="title">Přidání stromu</h1>
+  </ion-header-bar>
+  <ion-content class="padding">
+    <div class="list list-inset">
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Jméno stromu</span>
+        <input type="text" ng-model="vm.tree.name" placeholder="Dub letní">
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Latinský název</span>
+        <input type="text" ng-model="vm.tree.nameLatin" placeholder="Quercus robur">
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Odkaz na popis</span>
+        <input type="text" ng-model="vm.tree.link" placeholder="https://cs.wikipedia.org/wiki/Dub_letn%C3%AD">
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Odkaz na obrázek</span>
+        <input type="text" ng-model="vm.tree.imgLink" placeholder="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Illustration_Quercus_robur0.jpg/800px-Illustration_Quercus_robur0.jpg">
+      </label>
+      <button class="button button-full button-balanced" ng-disabled="!vm.canSave()" ng-click="vm.saveTree()">
+        Uložit
+      </button>
+    </div>
+    <div class="card" ng-if="!vm.hasContours">
+      <div class="item item-divider item-text-wrap assertive">
+        Tvar listu není dostupný!
+      </div>
+    </div>
+    <canvas id="pathCanvasModal" width="{{ vm.modal.modalEl.clientWidth - vm.padding }}" height="{{ vm.options.pathHeight }}"></canvas>
+    <label class="item item-input item-stacked-label">
+      <span class="input-label">Poznámka</span>
+      <input type="text" ng-model="vm.tree.descriptors[0].note" placeholder="Porušený list">
+    </label>
+  </ion-content>
+</ion-modal-view>

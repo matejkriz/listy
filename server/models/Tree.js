@@ -3,22 +3,21 @@ var db = require('./Database');
 /**
  * Create a Schema to hold tree information.
  */
-var Descriptor = new db.Schema({
-  note: String,
-  descriptor: [Number]
-});
-
-/**
- * Create a Schema to hold tree information.
- */
 var Tree = new db.Schema({
-  tree: {
+  name: {
+    type: String,
+    index: true
+  },
+  nameLatin: {
     type: String,
     index: true
   },
   link: String,
   imgLink: String,
-  descriptors: [Descriptor]
+  descriptors: [{
+    note: String,
+    descriptor: [Number]
+  }]
 });
 
 if (process.env.NODE_ENV === 'development') {
