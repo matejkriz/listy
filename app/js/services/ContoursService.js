@@ -91,7 +91,9 @@
                 y: y
               });
               this.allContours.push(points);
-              return this.allContours;
+              if(points.length > 500) {
+                return this.allContours;
+              }
             }
 
             //pix.r = 255;
@@ -136,12 +138,13 @@
         }*/
 
         // copy the image data back onto the canvas
-        imageCtx.putImageData(imageData, 0, 0); // at coords 0,0
+        if (this.allContours.length === 0) {
+          imageCtx.putImageData(imageData, 0, 0);
+        }
         return this.allContours;
       };
 
       this.followContour = function(startPoint) {
-        //console.log("followContour @",startPoint);
         var points = []; // start new contour
         points.push(startPoint);
         var w = this.pixelsWidth;
@@ -260,17 +263,14 @@
           //var index = y*w*4+x*4;
           numPoints++;
           //console.log(point[0],startPoint[0],"  ",point[1],startPoint[1]);
-
         } while (!(point.x === startPoint.x && point.y === startPoint.y) && numPoints < this.maxContourPoints);
-
         this.closeContour(points);
 
         return points;
       };
 
       this.closeContour = function(points) {
-        //console.log("CLOSE");
-        //console.log("pixels: ",this.pixels);
+        points[points.length - 1] = points[0];
       };
 
       this.getPoints = function(points) {
@@ -281,6 +281,49 @@
         }
         return log;
       };
+
+      function findOffset(points, width) {
+        var offset = 0;
+        var middle = Math.round(width / 2);
+        var lowest = 0;
+        for (var i = 0; i < points.length; i++) {
+          if (Math.abs(points[i].x - middle) < 3) {
+            if (points[i].y > lowest) {
+              lowest = points[i].y;
+              offset = i;
+            }
+          }
+        }
+        return offset;
+      }
+
+      function rotateArray(points, offset) {
+        return points;
+      }
+
+      Array.prototype.rotate = (function() {
+        // save references to array functions to make lookup faster
+        var push = Array.prototype.push,
+          splice = Array.prototype.splice;
+
+        return function(count) {
+          var len = this.length >>> 0, // convert to uint
+            count = count >> 0; // convert to int
+
+          // convert count to value in range [0, len)
+          count = ((count % len) + len) % len;
+
+          // use splice.call() instead of this.splice() to make function generic
+          push.apply(this, splice.call(this, 0, count));
+          return this;
+        };
+      })();
+
+      this.startBottom = function(points) {
+        var offset = findOffset(points, this.pixelsWidth);
+        points = points.rotate(offset);
+        return points;
+      }
     }
     return factory;
   });
