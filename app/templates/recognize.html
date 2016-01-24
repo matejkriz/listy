@@ -43,5 +43,8 @@
     </div>
     <canvas id="previewCanvas" width="{{ vm.canvas.width }}" height="{{ vm.canvas.height }}" on-double-tap="vm.toggleEdit()"></canvas>
     <canvas id="cannyCanvas" width="{{ vm.canvas.width }}" height="{{ vm.canvas.height }}"></canvas>
+    <div>
+      <button class="button icon ion-paintbrush" ng-class="vm.enableEraser? 'button-energized':'button-stable'" ng-click="vm.toggleEraser()"></button>
+    </div>
   </ion-content>
 </ion-view>
