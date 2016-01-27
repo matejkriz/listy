@@ -9,6 +9,7 @@
       'Feat',
       'FileReader',
       'ImageEdit',
+      '$ionicHistory',
       '$ionicPopup',
       '$ionicModal',
       '$scope',
@@ -24,6 +25,7 @@
         Feat,
         FileReader,
         ImageEdit,
+        $ionicHistory,
         $ionicPopup,
         $ionicModal,
         $scope,
@@ -95,7 +97,12 @@
           }];
           TreeService.find(vm.tree)
             .then(function(res) {
-              $state.go('^.treeDetail', {treeId:res._id})
+              $ionicHistory.nextViewOptions({
+                historyRoot: false
+              });
+              $state.go('^.treeDetail', {
+                treeId: res._id
+              })
             })
             .catch(function(err) {
               showError(err);

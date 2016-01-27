@@ -4,11 +4,13 @@
     'angular',
 
     'controllers/recognizeCtrl',
+    'controllers/tabsCtrl',
     'controllers/treesCtrl',
     'controllers/treeDetailCtrl'
   ], function(
     angular,
     recognizeCtrl,
+    tabsCtrl,
     treesCtrl,
     treeDetailCtrl
   ) {
@@ -17,6 +19,7 @@
 
     module.controller({
       recognizeCtrl: recognizeCtrl,
+      tabsCtrl: tabsCtrl,
       treesCtrl: treesCtrl,
       treeDetailCtrl: treeDetailCtrl
     });
