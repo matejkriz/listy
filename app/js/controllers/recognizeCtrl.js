@@ -202,9 +202,8 @@
           vm.hasContours = vm.contour && vm.contour.length > 0;
 
           if (vm.hasContours) {
-            vm.contour = Contours.startBottom(vm.contour);
-
             var centerPoint = Canvas.getCenter(vm.contour);
+            vm.contour = Contours.startBottom(vm.contour, centerPoint);
             Canvas.drawPoint(cannyCtx, centerPoint);
             path = Canvas.getPath(vm.contour, centerPoint);
             Canvas.canvasClear(pathCtx);

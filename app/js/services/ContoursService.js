@@ -282,9 +282,9 @@
         return log;
       };
 
-      function findOffset(points, width) {
+      function findOffset(points, centerPoint) {
         var offset = 0;
-        var middle = Math.round(width / 2);
+        var middle = centerPoint.x;
         var lowest = 0;
         for (var i = 0; i < points.length; i++) {
           if (Math.abs(points[i].x - middle) < 3) {
@@ -319,8 +319,8 @@
         };
       })();
 
-      this.startBottom = function(points) {
-        var offset = findOffset(points, this.pixelsWidth);
+      this.startBottom = function(points, centerPoint) {
+        var offset = findOffset(points, centerPoint);
         points = points.rotate(offset);
         return points;
       }
