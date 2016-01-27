@@ -7,10 +7,13 @@
   </ion-nav-buttons>
   <ion-content class="padding">
     <!-- TODO: enable to take photo -->
-    <div class="file-upload button icon-left ion-camera button-block button-stable" ng-click="vm.takePicture()">
+    <div class="file-upload button icon-left ion-camera button-block button-positive" ng-click="vm.takePicture()">
       <input type="file" class="file-upload__input" ng-file-select>
       <span>Získat foto listu</span>
     </div>
+
+    <i class="icon ion-leaf"></i>
+
 
     <canvas id="previewCanvas" width="{{ vm.canvas.width }}" height="{{ vm.canvas.height }}" on-double-tap="vm.toggleEdit()"></canvas>
     <canvas id="cannyCanvas" width="{{ vm.canvas.width }}" height="{{ vm.canvas.height }}"></canvas>
