@@ -9,7 +9,7 @@
       'Feat',
       'FileReader',
       'ImageEdit',
-      '$ionicHistory',
+      '$ionicLoading',
       '$ionicPopup',
       '$ionicModal',
       '$scope',
@@ -25,7 +25,7 @@
         Feat,
         FileReader,
         ImageEdit,
-        $ionicHistory,
+        $ionicLoading,
         $ionicPopup,
         $ionicModal,
         $scope,
@@ -41,7 +41,7 @@
         var size = Math.floor(vm.windowWidth / 2 - vm.padding);
         vm.canvas = {
           width: size,
-          height: size
+          height: 15
         };
 
         vm.options = {
@@ -83,29 +83,30 @@
         vm.toggleEdit = toggleEdit;
         vm.toggleEraser = toggleEraser;
 
-        // TODO: remove this for production
-        drawImages('img/test.jpg', 'previewCanvas');
+        //drawImages('img/test.jpg', 'previewCanvas');
 
         function canSave() {
           return vm.hasContours;
         }
 
         function findTree() {
+          reprocessCanny(500);
+          $ionicLoading.show();
           vm.tree.descriptors = [{
             note: '',
             descriptor: descriptor
           }];
           TreeService.find(vm.tree)
             .then(function(res) {
-              $ionicHistory.nextViewOptions({
-                historyRoot: false
-              });
               $state.go('^.treeDetail', {
                 treeId: res._id
               })
             })
             .catch(function(err) {
               showError(err);
+            })
+            .finally(function(){
+              $ionicLoading.hide();
             });
         }
 
@@ -119,6 +120,8 @@
         function drawImages(image, canvasID) {
           previewCtx = Canvas.getContext(canvasID);
           Canvas.canvasClear(previewCtx);
+          // FIXME: get id from params
+          cannyCtx = Canvas.getContext('cannyCanvas');
 
           img = new Image();
 
@@ -247,6 +250,7 @@
             ImageEdit.turnOn();
           } else {
             ImageEdit.turnOff();
+            reprocessCanny(0);
           }
           enableEdit = !enableEdit;
         }
@@ -254,6 +258,7 @@
         vm.enableEraser = false;
 
         function toggleEraser() {
+          reprocessCanny(0);
           vm.enableEraser = !vm.enableEraser;
           Canvas.setErasing(vm.enableEraser);
           // TODO: enable to not save changes

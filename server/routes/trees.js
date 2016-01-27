@@ -23,7 +23,9 @@ function addTree(req, res, next) {
 var defaultQuery = {
   startIndex: 0,
   limitation: 30,
-  sort: {name: 1},
+  sort: {
+    name: 1
+  },
   filters: {},
   select: {
     descriptors: 0
@@ -64,10 +66,16 @@ function findClosest(sourceDescriptor) {
 }
 
 function findTree(req, res, next) {
-  Tree.find().exec(function(err, trees) {
-    if (err) return next(err);
-    treesList = trees;
-    var resultTree = findClosest(req.body);
-    res.send(resultTree);
-  });
+  if (!req.body.length || req.body.length < 1) {
+    res
+      .status(400)
+      .send('Missing descriptors!');
+  } else {
+    Tree.find().exec(function(err, trees) {
+      if (err) return next(err);
+      treesList = trees;
+      var resultTree = findClosest(req.body);
+      res.send(resultTree);
+    });
+  }
 }
