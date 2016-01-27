@@ -3,6 +3,7 @@ var Tree = require('../models/Tree');
 var util = require('util');
 var dtwLib = require('dtw');
 var dtw = new dtwLib();
+var myDTW = require('../lib/dtw');
 
 exports.addTree = addTree;
 exports.getList = getList;
@@ -11,7 +12,7 @@ exports.findTree = findTree;
 var treesList = [];
 
 function addTree(req, res, next) {
-  debug(util.inspect(req.body));
+  //debug(util.inspect(req.body));
   //TODO: add validation of input
 
   Tree.create(req.body, function(err, tree) {
@@ -33,7 +34,7 @@ var defaultQuery = {
 };
 
 function getList(req, res, next) {
-  debug(util.inspect(req));
+  //debug(util.inspect(req));
   var query = defaultQuery;
 
   Tree.find(query.filters || {})
@@ -49,12 +50,14 @@ function getList(req, res, next) {
 };
 
 function findClosest(sourceDescriptor) {
-  var dbDescriptor, cost, index;
+  var dbDescriptor, cost, myCost, index;
   var minCost = Infinity;
   for (var i = 0; i < treesList.length; i++) {
     for (var j = 0; j < treesList[i].descriptors.length; j++) {
       dbDescriptor = treesList[i].descriptors[j].descriptor;
-      cost = dtw.compute(dbDescriptor, sourceDescriptor);
+      //cost = dtw.compute(dbDescriptor, sourceDescriptor);
+      cost = myDTW.DTWDistance(dbDescriptor, sourceDescriptor, 300);
+      debug("treename: cost", treesList[i].name, ': ', cost);
       if (cost < minCost) {
         minCost = cost;
         index = i;
