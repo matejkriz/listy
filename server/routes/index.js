@@ -12,8 +12,9 @@ router.get('/', function(req, res, next) {
 router.get('/api/images', images.testOpenCV); // test openCV
 router.post('/api/images', images.uploadImage(app.get('images'))); // receive photo of leaf from client
 
-router.post('/api/trees/dtw', trees.findTree);
+router.get('/api/trees', trees.getList);
 router.post('/api/trees', trees.addTree);
+router.post('/api/trees/dtw', trees.findTree);
 
 
 module.exports = router;

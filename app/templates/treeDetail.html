@@ -5,10 +5,19 @@
   The Friends service returns an array of friend data
 -->
 <ion-view view-title="{{vm.tree.name}}">
-  <ion-content class="padding">
-    <img ng-src="{{vm.tree.image}}" style="width: 64px; height: 64px">
-    <p>
-      {{vm.tree.nameLatin}}
-    </p>
+  <ion-content class="padding full-height">
+    <div class="list card full-height">
+      <div class="item item-avatar">
+        <img ng-src="{{vm.tree.imgLink}}">
+        <h2>{{vm.tree.name}}</h2>
+        <p>
+          {{vm.tree.nameLatin}}
+        </p>
+      </div>
+
+      <div class="item item-image full-height">
+        <iframe ng-src="{{ vm.tree.link | trusted }}" class="full-height full-width"></iframe>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

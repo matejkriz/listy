@@ -15,6 +15,8 @@
     services.service('ImageEdit', require('services/ImageEditService'));
     services.service('TreeService', require('services/TreeService'));
 
+    services.filter('trusted', require('services/TrustedFilter'));
+
     return services;
 
   });

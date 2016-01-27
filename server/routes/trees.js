@@ -5,6 +5,7 @@ var dtwLib = require('dtw');
 var dtw = new dtwLib();
 
 exports.addTree = addTree;
+exports.getList = getList;
 exports.findTree = findTree;
 
 var treesList = [];
@@ -17,6 +18,32 @@ function addTree(req, res, next) {
     if (err) return next(err);
     res.send('Tree ' + tree.tree + ' was saved with ID: ' + tree._id);
   });
+};
+
+var defaultQuery = {
+  startIndex: 0,
+  limitation: 30,
+  sort: {name: 1},
+  filters: {},
+  select: {
+    descriptors: 0
+  }
+};
+
+function getList(req, res, next) {
+  debug(util.inspect(req));
+  var query = defaultQuery;
+
+  Tree.find(query.filters || {})
+    .sort(query.sort)
+    .skip(query.startIndex)
+    .limit(query.limitation)
+    .select(query.select)
+    .exec(function(err, trees) {
+      if (err) return next(err);
+      treesList = trees;
+      res.send(treesList);
+    });
 };
 
 function findClosest(sourceDescriptor) {
@@ -43,8 +70,4 @@ function findTree(req, res, next) {
     var resultTree = findClosest(req.body);
     res.send(resultTree);
   });
-
-
-
-
 }
