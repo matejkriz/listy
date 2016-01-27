@@ -6,19 +6,13 @@ navigation history that also transitions its views in and out.
 <ion-tabs class="tabs-icon-top tabs-color-active-balanced">
 
   <!-- Dashboard Tab -->
-  <ion-tab title="Rozpoznání" icon-off="ion-leaf" icon-on="ion-leaf" href="#/tab/recognize">
+  <ion-tab title="Rozpoznání" icon-off="ion-leaf" icon-on="ion-leaf" ui-sref="tab.recognize">
     <ion-nav-view name="tab-recognize"></ion-nav-view>
   </ion-tab>
 
   <!-- Chats Tab -->
-  <ion-tab title="Databáze" icon-off="ion-navicon-round" icon-on="ion-navicon-round" href="#/tab/trees">
+  <ion-tab title="Databáze" icon-off="ion-navicon-round" icon-on="ion-navicon-round" ui-sref="tab.trees" on-deselect="vm.clearHistory()">
     <ion-nav-view name="tab-trees"></ion-nav-view>
   </ion-tab>
-
-  <!-- Account Tab -->
-  <!-- <ion-tab title="Nastavení" icon-off="ion-ios-gear-outline" icon-on="ion-ios-gear" href="#/tab/account">
-    <ion-nav-view name="tab-account"></ion-nav-view>
-  </ion-tab> -->
-
 
 </ion-tabs>

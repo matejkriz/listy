@@ -53,7 +53,8 @@
         .state('tab', {
         url: '/tab',
         abstract: true,
-        templateUrl: 'templates/tabs.html'
+        templateUrl: 'templates/tabs.html',
+        controller: 'tabsCtrl as vm'
       })
 
       // Each tab has its own nav history stack:
@@ -82,8 +83,11 @@
           views: {
             'tab-trees': {
               templateUrl: 'templates/treeDetail.html',
-              controller: 'treeDetailCtrl as vm'
+              controller: 'treeDetailCtrl as vm',
             }
+          },
+          defaultBack: {
+            state: 'tab.trees'
           }
         });
 
