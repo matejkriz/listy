@@ -57,7 +57,6 @@
       }
 
       function panMove(e) {
-        e.preventDefault();
         if (img.width > width || img.height > height) {
           Canvas.canvasClear(ctx);
           ctx.translate(e.deltaX / 40, e.deltaY / 40);

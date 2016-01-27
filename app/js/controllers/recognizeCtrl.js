@@ -12,6 +12,7 @@
       '$ionicPopup',
       '$ionicModal',
       '$scope',
+      '$state',
       '$timeout',
       'TreeService',
       '$window',
@@ -26,6 +27,7 @@
         $ionicPopup,
         $ionicModal,
         $scope,
+        $state,
         $timeout,
         TreeService,
         $window) {
@@ -93,7 +95,7 @@
           }];
           TreeService.find(vm.tree)
             .then(function(res) {
-              console.log("res = ", res);
+              $state.go('^.treeDetail', {treeId:res._id})
             })
             .catch(function(err) {
               showError(err);
