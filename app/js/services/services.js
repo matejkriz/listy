@@ -9,7 +9,6 @@
     services.service('Camera', require('services/CameraService'));
     services.service('Canvas', require('services/CanvasService'));
     services.service('Contours', require('services/ContoursService'));
-    services.service('CV', require('services/CVService'));
     services.service('Feat', require('services/JSFeatService'));
     services.service('FileReader', require('services/FileReaderService'));
     services.service('ImageEdit', require('services/ImageEditService'));
