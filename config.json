@@ -1,3 +1,3 @@
 {
-  "database": "localhost:27017"
+  "database": "mongodb://heroku_v4m4zz28:dbdrt583ru0s5oh2f2bi4oa0d7@ds047935.mongolab.com:47935/heroku_v4m4zz28"
 }
