@@ -12,6 +12,8 @@
     "dtw": "0.0.3",
     "express": "~4.13.1",
     "jade": "~1.11.0",
+    "mongo": "^0.1.0",
+    "mongoose": "^4.3.7",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0"
   }
