@@ -56,15 +56,15 @@ function findClosest(sourceDescriptor) {
     for (var j = 0; j < treesList[i].descriptors.length; j++) {
       dbDescriptor = treesList[i].descriptors[j].descriptor;
       //cost = dtw.compute(dbDescriptor, sourceDescriptor);
-      cost = myDTW.DTWDistance(dbDescriptor, sourceDescriptor, 300);
-      debug("treename: cost", treesList[i].name, ': ', cost);
+      cost = myDTW.DTWDistance(dbDescriptor, sourceDescriptor, 30);
+      debug("treename: DTWDistance", treesList[i].name, ': ', cost);
       if (cost < minCost) {
         minCost = cost;
         index = i;
-        console.log('minCost: ' + minCost);
       }
     }
   }
+  debug("minimal DTWDistance: ", minCost);
   return treesList[index];
 }
 
